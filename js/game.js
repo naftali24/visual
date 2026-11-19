@@ -126,6 +126,24 @@
   }
   document.fonts?.ready.then(drawTargets);
   requestAnimationFrame(drawTargets);
+  const latestLine = document.createElementNS("http://www.w3.org/2000/svg", "g");
+  latestLine.setAttribute("aria-hidden", "true");
+  latestLine.style.pointerEvents = "none";
+  function highlightLatest(){
+    const last = found[found.length - 1];
+    const source = last && (horseBox
+      ? document.querySelector(`#leaders [data-index="${last.index}"]`)
+      : document.querySelectorAll("#guides > line")[last.index]);
+    const parent = horseBox ? document.getElementById("leaders").parentNode : document.getElementById("guides");
+    if (latestLine.parentNode !== parent) parent.append(latestLine);
+    latestLine.replaceChildren();
+    if (!source) return;
+    const line = source.cloneNode(false);
+    line.removeAttribute("class");
+    line.removeAttribute("data-index");
+    line.setAttribute("style", "fill:none;stroke:#ffda68;stroke-width:3;opacity:1;vector-effect:non-scaling-stroke;pointer-events:none");
+    latestLine.append(line);
+  }
   function syncRevealed(){
     drawTargets();
     if(horseBox){
@@ -146,6 +164,7 @@
         node.classList.toggle("atlas-game-unfound",!found.some(item=>item.id===entries[i]?.id));
       });
     }
+    highlightLatest();
   }
   const observer=new MutationObserver(syncRevealed);
   for(const id of horseBox?["labels","leaders"]:["guides"]){
