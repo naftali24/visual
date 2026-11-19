@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Horse Atonomy</title>
+<link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+<header><div class="bar">
+<h1>Horse Atonomy</h1>
+<span class="language-picker"><svg class="atlas-icon" viewBox="0 0 46 46" aria-hidden="true">
+  <rect width="46" height="46" rx="9" fill="#765006"/>
+  <path d="M23 15c-5-4-11-4-17-2v21c6-2 12-1 17 3 5-4 11-5 17-3V13c-6-2-12-2-17 2Z" fill="#ffda68" stroke="#fff1ae" stroke-width="1.5"/>
+  <path d="M23 15v22M10 29c4-1 7 0 10 2m6 0c3-2 6-3 10-2" fill="none" stroke="#765006" stroke-width="1.5"/>
+  <circle cx="23" cy="13" r="8" fill="#a66e0d" stroke="#fff1ae" stroke-width="1.5"/>
+  <ellipse cx="23" cy="13" rx="3.5" ry="8" fill="none" stroke="#fff1ae"/>
+  <path d="M15 13h16" stroke="#fff1ae"/>
+</svg><select id="language" aria-label="Translation language">
+  <option value="he" selected>עברית</option><option value="ar">العربية</option>
+  <option value="es">Español</option><option value="fr">Français</option>
+  <option value="de">Deutsch</option><option value="ru">Русский</option>
+  <option value="it">Italiano</option><option value="pt">Português</option><option value="en">English</option>
+</select></span>
+</div></header>
+<main><div class="stage">
+<svg id="horse" viewBox="0 0 800 465" aria-labelledby="figureTitle">
+<title id="figureTitle">Side-view diagram of a horse’s internal organs</title>
+<g id="body"><image href="./images/horse-anatomy.webp" x="0" y="22" width="710" height="420" preserveAspectRatio="none" aria-hidden="true"/></g>
+<g id="leaders" aria-hidden="true"></g><g id="labels"></g>
+</svg></div>
+<p id="translationStatus" role="status" hidden></p>
+<section id="detail" aria-live="polite" hidden>
+  <h2 id="term"></h2>
+  <p id="translation" dir="auto"></p>
+  <button type="button" id="explanation" lang="en" title="Read aloud"></button>
+</section>
+</main>
+<script src="./data/horse/atlasButtons.js"></script>
+<script src="./data/horse/atlasExplanations.js"></script>
+<script src="./app.js"></script>
+</body>
+</html>
