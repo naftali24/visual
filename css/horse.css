@@ -35,3 +35,5 @@
 .ask-gpt { right:auto; left:env(safe-area-inset-left,0px); font-size:17px; }
 
 #detail #explanation, #detail #term [lang=en], #detail #translation { color:#241800; }
+
+.label text.translated[lang="he"] { font-size:19px; }

@@ -83,7 +83,7 @@
       border:2px solid #ffda68;border-radius:10px;background:linear-gradient(#ffe788,#d99a16);color:#241300;font:700 48px/1 Arial,sans-serif;cursor:pointer}
     #detail h2{font-size:24px;margin:0 0 8px}
     #detail p,#detail button:not(.atlas-close-detail){font-size:20px;line-height:1.35}
-    #detail p[lang="he"]{font-size:22px}`;
+    #detail p[lang="he"]{font-size:20px}`;
   document.head.append(style);
   new ResizeObserver(schedule).observe(main);
   new MutationObserver(records => {

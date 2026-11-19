@@ -36,3 +36,5 @@ body[data-layout="map"] .map-credit { display:block; text-align:center; font:9px
   body[data-layout="map"] #below { grid-template-columns:repeat(5,minmax(0,1fr)); }
 }
 body[data-layout="map"] .items button { font-size:clamp(18px,2.7vw,30px); }
+
+.items button span.translated[lang="he"] { font-size:.95em; }
