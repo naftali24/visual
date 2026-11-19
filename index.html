@@ -2,8 +2,12 @@
 <html lang="he">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>ספר ויזואלי של נפתלי</title>
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="apple-touch-icon" href="./icons/visual-192.png">
+<meta name="theme-color" content="#090703">
+<meta name="apple-mobile-web-app-capable" content="yes">
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#090703;color:#fff;font:16px Arial,sans-serif}
@@ -43,10 +47,10 @@ h2{color:#ffda68;text-align:center;margin:0 0 14px;font-size:24px}
 <main>
 <h2 id="topic-heading">נושאים</h2>
 <div class="topic-links" id="topic-links">
-<a href="./topics/horse/index.html" data-topic="horse">אנטומיה פנימית של הסוס</a>
+<a href="./topics/horse/index.html" data-topic="horse">סוס-אנטומיה פנימית</a>
 <!-- visual-topics:start -->
 <nav aria-label="More topics">
-<ul><li><a href="./topics/dog-internal-anatomy/index.html" data-topic="dog-internal-anatomy">אנטומיה פנימית של הכלב</a></li></ul>
+<ul><li><a href="./topics/dog-internal-anatomy/index.html" data-topic="dog-internal-anatomy">כלב-אנטומיה פנימית</a></li></ul>
 </nav>
 <!-- visual-topics:end -->
 </div>
@@ -60,8 +64,8 @@ const selector=document.getElementById("language");
 const topics=new Map();
 let lastLink;
 const labels={
-  en:["Naftali’s Visual Book","Topics","Horse Internal Anatomy","Dog Internal Anatomy","Atlas language"],
-  he:["ספר ויזואלי של נפתלי","נושאים","אנטומיה פנימית של הסוס","אנטומיה פנימית של הכלב","שפת האטלס"],
+  en:["Naftali’s Visual Book","Topics","Horse – Internal Anatomy","Dog – Internal Anatomy","Atlas language"],
+  he:["ספר ויזואלי של נפתלי","נושאים","סוס-אנטומיה פנימית","כלב-אנטומיה פנימית","שפת האטלס"],
   ar:["كتاب نفتالي البصري","الموضوعات","التشريح الداخلي للحصان","التشريح الداخلي للكلب","لغة الأطلس"],
   es:["El libro visual de Naftali","Temas","Anatomía interna del caballo","Anatomía interna del perro","Idioma del atlas"],
   fr:["Le livre visuel de Naftali","Sujets","Anatomie interne du cheval","Anatomie interne du chien","Langue de l’atlas"],
@@ -129,19 +133,10 @@ for(const link of document.querySelectorAll("#topic-links a")){
   link.addEventListener("click",event=>{
     if(event.ctrlKey || event.metaKey || event.shiftKey || event.altKey)return;
     event.preventDefault();
-    requestAtlasFullscreen();
     lastLink=link;
     history.pushState(null,"","#"+slug);
     renderTopic();
   });
-}
-function requestAtlasFullscreen(){
-  if(document.fullscreenElement)return;
-  const element=document.documentElement;
-  try {
-    if(element.requestFullscreen)element.requestFullscreen().catch(()=>{});
-    else element.webkitRequestFullscreen?.();
-  } catch {}
 }
 function renderTopic(){
   const link=topics.get(location.hash.slice(1));
