@@ -179,7 +179,7 @@ let preference=new URLSearchParams(location.search).get("lang");
 if(!preference){
   try { preference=localStorage.getItem("visualLanguage"); } catch {}
 }
-const initialLanguage=supportedLanguages.includes(preference)?preference:"en";
+const initialLanguage=supportedLanguages.includes(preference)?preference:"he";
 const homeLabels={en:"Back to topics",he:"חזרה לתפריט הראשי",ar:"العودة إلى الموضوعات",es:"Volver a los temas",fr:"Retour aux sujets",de:"Zurück zur Themenliste",ru:"Вернуться к темам",it:"Torna agli argomenti",pt:"Voltar aos temas"};
 const homeLink=$("restart");
 homeLink.setAttribute("aria-label",homeLabels[initialLanguage]);

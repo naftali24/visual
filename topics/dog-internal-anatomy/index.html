@@ -14,10 +14,11 @@ main { max-width: 1050px; margin: auto; padding: 10px; }
 #stage { position: relative; padding: 6px; border: 1px solid #8b650e; border-radius: 15px; background: #030302; }
 #picture { display: block; width: 100%; height: auto; aspect-ratio: 3/2; object-fit: contain; background: #030302; }
 .items { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,135px),1fr)); gap: 6px; position: relative; z-index: 1; }
-.items button { border: 1px solid #b78b2b; border-radius: 6px; background: #1d1508; color: #9bdcff; font: 700 16px system-ui; padding: 6px 4px; min-height: 48px; cursor: pointer; overflow-wrap: anywhere; }
-.items button span { display: block; }
-.items button span.translated { color: #f1cf70; }
-.items button[aria-pressed=true] { text-shadow: 0 0 7px #edb340; color: #fff4b0; }
+.items button { border: 1px solid #b78b2b; border-radius: 6px; background: #1d1508; color: #9bdcff; font: 750 clamp(15px,2.4vw,25px)/1.1 Arial,sans-serif; padding: 3px 4px; min-height:44px; cursor:pointer; overflow-wrap:anywhere; }
+.items button span { display:block; }
+.items button span.translated { color:#f1cf70; font-size:.85em; margin-top:2px; }
+.items button[aria-pressed=true] span, .items button:focus-visible span { color:#fff4b0; filter:drop-shadow(0 0 3px #f6b62c); }
+@media (hover:hover) { .items button:hover span { filter:drop-shadow(0 0 2px #f6b62c); } }
 .items button:focus-visible { outline: 2px solid #f1cf70; outline-offset: 2px; }
 #guides { position: absolute; inset: 0; display: block; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
 #guides line { stroke: #e5845d; stroke-width: 1; opacity: .65; }
@@ -64,7 +65,7 @@ let requestedLanguage=new URLSearchParams(location.search).get("lang");
 if(!requestedLanguage){
   try { requestedLanguage=localStorage.getItem("visualLanguage"); } catch {}
 }
-const language=supportedLanguages.includes(requestedLanguage)?requestedLanguage:"en";
+const language=supportedLanguages.includes(requestedLanguage)?requestedLanguage:"he";
 const homeLabels={en:"Back to topics",he:"חזרה לתפריט הראשי",ar:"العودة إلى الموضوعات",es:"Volver a los temas",fr:"Retour aux sujets",de:"Zurück zur Themenliste",ru:"Вернуться к темам",it:"Torna agli argomenti",pt:"Voltar aos temas"};
 const homeLink=get("restart");
 homeLink.setAttribute("aria-label",homeLabels[language]);

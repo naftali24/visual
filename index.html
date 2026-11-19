@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="en">
+<html lang="he">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Visual Atlas</title>
+<title>ספר ויזואלי של נפתלי</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#090703;color:#fff;font:16px Arial,sans-serif}
@@ -11,27 +11,29 @@ body{margin:0;background:#090703;color:#fff;font:16px Arial,sans-serif}
 header{background:#120d05;border-bottom:1px solid #a87914;padding:14px 10px}
 .bar{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap}
 h1{margin:0;color:#ffda68;text-shadow:0 0 12px #f8b62d80;font-size:clamp(30px,6vw,46px)}
-.language{display:inline-flex;align-items:center;gap:6px;color:#fff0ad;background:#765006;border:1px solid #c69426;border-radius:9px;padding-inline-start:9px;font-size:20px}
-.language select{min-height:44px;padding:4px 7px;border:0;border-radius:8px;background:#f8e8ad;color:#241805;font:700 16px Arial,sans-serif;cursor:pointer}
+.language{display:inline-grid;position:relative;color:#241805;border:1px solid #c69426;border-radius:8px;background:#f8e8ad;font:700 16px Arial,sans-serif}
+#language-width{visibility:hidden;padding:0 24px 0 8px;min-height:44px;white-space:nowrap}
+.language select{position:absolute;inset:0;width:100%;height:100%;padding-inline-start:7px;border:0;border-radius:8px;background:#f8e8ad;color:#241805;font:inherit;cursor:pointer}
 .language:focus-within,:focus-visible{outline:2px solid #ffda68;outline-offset:4px}
 main{max-width:1050px;margin:auto;padding:20px 12px}
 h2{color:#ffda68;text-align:center;margin:0 0 14px;font-size:24px}
 .topic-links,.topic-links ul{display:grid;gap:8px;margin:0;padding:0;list-style:none}
 .topic-links a{display:flex;align-items:center;min-height:50px;max-width:460px;width:100%;margin:auto;padding:10px 18px;border:1px solid #e2b63e;border-radius:10px;background:#f8e8ad;color:#241805!important;font-size:19px;font-weight:800;text-decoration:none}
 .topic-links a:hover{background:#ffd85b}
-.topic-links nav{margin:0!important;padding:0!important;direction:ltr}
+.topic-links nav{margin:0!important;padding:0!important}
+#catalog[dir=rtl] .topic-links a{margin-inline-start:0;justify-content:flex-start;text-align:right}
 .topic-links summary{display:none}
 #viewer{display:block;width:100%;height:100vh;height:100dvh;border:0;background:#090703}
 </style>
 </head>
 <body>
-<div id="catalog">
+<div id="catalog" dir="rtl">
 <header><div class="bar">
-<h1 id="catalog-title">Visual Atlas</h1>
+<h1 id="catalog-title">ספר ויזואלי של נפתלי</h1>
 <label class="language" title="Language">
-<span aria-hidden="true">🌐</span>
+<span id="language-width" aria-hidden="true">עברית</span>
 <select id="language" aria-label="Atlas language" title="Atlas language">
-<option value="en">English</option><option value="he">עברית</option>
+<option value="en">English</option><option value="he" selected>עברית</option>
 <option value="ar">العربية</option><option value="es">Español</option>
 <option value="fr">Français</option><option value="de">Deutsch</option>
 <option value="ru">Русский</option><option value="it">Italiano</option><option value="pt">Português</option>
@@ -39,12 +41,12 @@ h2{color:#ffda68;text-align:center;margin:0 0 14px;font-size:24px}
 </label>
 </div></header>
 <main>
-<h2 id="topic-heading">Topics</h2>
+<h2 id="topic-heading">נושאים</h2>
 <div class="topic-links" id="topic-links">
-<a href="./topics/horse/index.html" data-topic="horse">Horse Internal Anatomy</a>
+<a href="./topics/horse/index.html" data-topic="horse">אנטומיה פנימית של הסוס</a>
 <!-- visual-topics:start -->
 <nav aria-label="More topics">
-<ul><li><a href="./topics/dog-internal-anatomy/index.html" data-topic="dog-internal-anatomy">Dog Internal Anatomy</a></li></ul>
+<ul><li><a href="./topics/dog-internal-anatomy/index.html" data-topic="dog-internal-anatomy">אנטומיה פנימית של הכלב</a></li></ul>
 </nav>
 <!-- visual-topics:end -->
 </div>
@@ -58,21 +60,22 @@ const selector=document.getElementById("language");
 const topics=new Map();
 let lastLink;
 const labels={
-  en:["Visual Atlas","Topics","Horse Internal Anatomy","Dog Internal Anatomy","Atlas language"],
-  he:["אטלס חזותי","נושאים","אנטומיה פנימית של הסוס","אנטומיה פנימית של הכלב","שפת האטלס"],
-  ar:["الأطلس المرئي","الموضوعات","التشريح الداخلي للحصان","التشريح الداخلي للكلب","لغة الأطلس"],
-  es:["Atlas visual","Temas","Anatomía interna del caballo","Anatomía interna del perro","Idioma del atlas"],
-  fr:["Atlas visuel","Sujets","Anatomie interne du cheval","Anatomie interne du chien","Langue de l’atlas"],
-  de:["Visueller Atlas","Themen","Innere Anatomie des Pferdes","Innere Anatomie des Hundes","Sprache des Atlas"],
-  ru:["Визуальный атлас","Темы","Внутренняя анатомия лошади","Внутренняя анатомия собаки","Язык атласа"],
-  it:["Atlante visivo","Argomenti","Anatomia interna del cavallo","Anatomia interna del cane","Lingua dell’atlante"],
-  pt:["Atlas visual","Temas","Anatomia interna do cavalo","Anatomia interna do cão","Idioma do atlas"]
+  en:["Naftali’s Visual Book","Topics","Horse Internal Anatomy","Dog Internal Anatomy","Atlas language"],
+  he:["ספר ויזואלי של נפתלי","נושאים","אנטומיה פנימית של הסוס","אנטומיה פנימית של הכלב","שפת האטלס"],
+  ar:["كتاب نفتالي البصري","الموضوعات","التشريح الداخلي للحصان","التشريح الداخلي للكلب","لغة الأطلس"],
+  es:["El libro visual de Naftali","Temas","Anatomía interna del caballo","Anatomía interna del perro","Idioma del atlas"],
+  fr:["Le livre visuel de Naftali","Sujets","Anatomie interne du cheval","Anatomie interne du chien","Langue de l’atlas"],
+  de:["Naftalis visuelles Buch","Themen","Innere Anatomie des Pferdes","Innere Anatomie des Hundes","Sprache des Atlas"],
+  ru:["Визуальная книга Нафтали","Темы","Внутренняя анатомия лошади","Внутренняя анатомия собаки","Язык атласа"],
+  it:["Il libro visivo di Naftali","Argomenti","Anatomia interna del cavallo","Anatomia interna del cane","Lingua dell’atlante"],
+  pt:["O livro visual de Naftali","Temas","Anatomia interna do cavalo","Anatomia interna do cão","Idioma do atlas"]
 };
 let topicTranslationRequest;
 
 function translateCatalog(){
   const lang=selector.value;
-  const [title,heading,horse,dog,languageLabel]=labels[lang] || labels.en;
+  const [title,heading,horse,dog,languageLabel]=labels[lang] || labels.he;
+  document.getElementById("language-width").textContent=selector.options[selector.selectedIndex].textContent;
   document.documentElement.lang=lang;
   catalog.dir=["he","ar"].includes(lang)?"rtl":"ltr";
   document.title=title;
@@ -106,7 +109,7 @@ let languagePreference=new URLSearchParams(location.search).get("lang");
 if(!languagePreference){
   try { languagePreference=localStorage.getItem("visualLanguage"); } catch {}
 }
-selector.value=Object.hasOwn(labels,languagePreference)?languagePreference:"en";
+selector.value=Object.hasOwn(labels,languagePreference)?languagePreference:"he";
 function changeLanguage(){
   try { localStorage.setItem("visualLanguage",selector.value); } catch {}
   const address=new URL(location.href);
