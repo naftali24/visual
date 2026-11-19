@@ -57,6 +57,10 @@
   document.documentElement.classList.add("atlas-playing");
 
   let queue, cursor;
+  let round = 0;
+  let speechFallback;
+  let completionStarted = false;
+  let applauseNodes = [];
   const found = [];
   function currentQuestion(){
     const item = queue[0];
@@ -65,6 +69,11 @@
     replay.hidden = Boolean(item);
   }
   function reset(){
+    round += 1;
+    completionStarted = false;
+    clearTimeout(speechFallback);
+    window.speechSynthesis?.cancel();
+    stopApplause();
     queue = [...items];
     for(let i=queue.length-1;i>0;i--){
       const j = Math.floor(Math.random()*(i+1));
@@ -231,6 +240,90 @@
       // The game remains playable when audio is unavailable.
     }
   }
+  const speechLocales = {he:"he-IL",en:"en-US",ar:"ar-SA",es:"es-ES",fr:"fr-FR",de:"de-DE",ru:"ru-RU",it:"it-IT",pt:"pt-PT"};
+  function speakAnswer(item, done = () => {}){
+    const thisRound = round;
+    clearTimeout(speechFallback);
+    const speech = window.speechSynthesis;
+    const Utterance = window.SpeechSynthesisUtterance;
+    if (!speech || !Utterance) { done(); return; }
+    let finished = false;
+    let fallback;
+    const finish = () => {
+      if (finished) return;
+      finished = true;
+      clearTimeout(fallback);
+      if (round === thisRound) done();
+    };
+    try {
+      speech.cancel();
+      const answer = new Utterance(item.name);
+      answer.lang = language !== "he" && item.name === item.en ? "en-US" : speechLocales[language];
+      answer.rate = .9;
+      answer.onend = finish;
+      answer.onerror = finish;
+      speechFallback = fallback = setTimeout(finish, 10000);
+      speech.speak(answer);
+    } catch { finish(); }
+  }
+  function stopApplause(){
+    for (const source of applauseNodes) {
+      try { source.stop(); } catch {}
+    }
+    applauseNodes = [];
+  }
+  async function playApplause(){
+    if (completionStarted) return;
+    completionStarted = true;
+    const thisRound = round;
+    try {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContext) return;
+      gongAudio ||= new AudioContext();
+      if (gongAudio.state === "suspended") await gongAudio.resume();
+      if (round !== thisRound) return;
+      const duration = 7;
+      const sampleRate = gongAudio.sampleRate;
+      const buffer = gongAudio.createBuffer(2, Math.round(sampleRate * duration), sampleRate);
+      const channels = [buffer.getChannelData(0), buffer.getChannelData(1)];
+      // Many short, irregular stereo handclaps form a crowd rather than a beat.
+      for (let time = .015; time < duration - .08; time += .018 + Math.random() * .045) {
+        const start = Math.floor(time * sampleRate);
+        const length = Math.floor((.045 + Math.random() * .09) * sampleRate);
+        const pan = Math.random();
+        const strength = .16 + Math.random() * .2;
+        let previous = 0;
+        for (let offset = 0; offset < length && start + offset < buffer.length; offset++) {
+          const age = offset / sampleRate;
+          const noise = Math.random() * 2 - 1;
+          const crack = noise - previous * .65;
+          previous = noise;
+          const envelope = Math.min(1, age / .001) * Math.exp(-age / .018);
+          channels[0][start + offset] += crack * envelope * strength * Math.sqrt(1 - pan);
+          channels[1][start + offset] += crack * envelope * strength * Math.sqrt(pan);
+        }
+      }
+      for (const samples of channels) {
+        for (let index = 0; index < samples.length; index++) {
+          const time = index / sampleRate;
+          const fade = Math.min(1, time / .12, (duration - time) / .55);
+          samples[index] = Math.tanh(samples[index] * 2) * Math.max(0, fade);
+        }
+      }
+      const source = gongAudio.createBufferSource();
+      source.buffer = buffer;
+      source.connect(gongAudio.destination);
+      applauseNodes.push(source);
+      source.onended = () => {
+        applauseNodes = applauseNodes.filter(node => node !== source);
+        source.disconnect();
+      };
+      source.start();
+      source.stop(gongAudio.currentTime + duration);
+    } catch {
+      // Unsupported audio never blocks completion or replay.
+    }
+  }
   function attempt(x,y){
     const item=queue[0];
     if(!item)return;
@@ -243,8 +336,10 @@
       status.textContent=again;
       return;
     }
-    found.push(queue.shift());
+    const answered = queue.shift();
+    found.push(answered);
     playGong();
+    speakAnswer(answered, queue.length ? undefined : playApplause);
     syncRevealed();
     status.textContent=correct+" "+found.length+"/"+items.length;
     currentQuestion();
@@ -270,6 +365,12 @@
     }
   });
   replay.addEventListener("click",reset);
+  window.addEventListener("pagehide", () => {
+    round += 1;
+    clearTimeout(speechFallback);
+    window.speechSynthesis?.cancel();
+    stopApplause();
+  });
   reset();
 
 
