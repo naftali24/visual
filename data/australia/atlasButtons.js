@@ -63,7 +63,7 @@ window.atlasPage = {
     {
       "id": "act",
       "en": "Capital Territory",
-      "he": "טריטוריית הבירה האוסטרלית",
+      "he": "טריטוריית הבירה",
       "x": 853.233,
       "y": 771.942,
       "group": "region"

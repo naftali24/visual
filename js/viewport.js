@@ -4,7 +4,7 @@
   const main = document.querySelector('main');
   let pending = false;
   function explanationLayout(totalHeight, detailTop, availableHeight, widthScale) {
-    if ((totalHeight - availableHeight) * widthScale <= 20) return 'flow';
+    if ((totalHeight - availableHeight) * widthScale <= 30) return 'flow';
     return (availableHeight - detailTop) * widthScale >= 96 ? 'scroll' : 'overlay';
   }
   function fit() {
