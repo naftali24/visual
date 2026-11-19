@@ -59,9 +59,9 @@
     #detail.atlas-detail-overlay{position:absolute;z-index:10;margin:0;padding:10px 12px;
       overflow:auto;overscroll-behavior:contain;border-radius:6px;padding-right:80px}
     #detail .atlas-close-detail{position:absolute;right:0;top:0;width:64px;height:64px;
-      border:2px solid #ffda68;border-radius:10px;background:#49320a;color:#ffda68;font:700 48px/1 Arial,sans-serif;cursor:pointer}
-    #detail h2{font-size:28px;margin:0 0 8px}
-    #detail p,#detail button:not(.atlas-close-detail){font-size:24px;line-height:1.4}`;
+      border:2px solid #ffda68;border-radius:10px;background:linear-gradient(#ffe788,#d99a16);color:#241300;font:700 48px/1 Arial,sans-serif;cursor:pointer}
+    #detail h2{font-size:24px;margin:0 0 8px}
+    #detail p,#detail button:not(.atlas-close-detail){font-size:20px;line-height:1.35}`;
   document.head.append(style);
   new ResizeObserver(schedule).observe(main);
   new MutationObserver(records => {

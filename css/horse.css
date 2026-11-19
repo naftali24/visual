@@ -9,19 +9,19 @@
   .language-picker .atlas-icon { width: 100%; height: 100%; pointer-events: none; filter: drop-shadow(0 0 5px #ffc94390); }
   .language-picker select { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
   .language-picker:focus-within { outline: 2px solid #f1cf70; outline-offset: 3px; }
-  .stage { border: 1px solid #8b650e; border-radius: 17px; overflow: hidden; background: #dedede; }
+  .stage { border: 1px solid #8b650e; border-radius: 17px; overflow: hidden; background: #030302; }
   svg { display: block; width: 100%; height: auto; }
   .connector { vector-effect: non-scaling-stroke; fill: none; stroke: #e06c4c; stroke-width: 1.15; opacity: .88; }
   .connector.active { stroke: #ffd85b; stroke-width: 3; opacity: 1; }
   .label { cursor: pointer; }
-  .label rect { fill: #1d1508; stroke: #b78b2b; stroke-width: 1; }
-  .label text { font: 750 20px Arial, sans-serif; fill: #9bdcff; text-anchor: middle; dominant-baseline: central; pointer-events: none; }
-  .label text.translated { fill: #f1cf70; font-size: 17px; }
+  .label rect { fill: url(#label-gold); stroke: #b78b2b; stroke-width: 1; }
+  .label text { font: 750 20px Arial, sans-serif; fill: #241300; text-anchor: middle; dominant-baseline: central; pointer-events: none; }
+  .label text.translated { fill: #493000; font-size: 17px; }
   .label:focus-visible { outline: none; }
-  .label.active text, .label:focus-visible text { fill: #fff4b0; filter: drop-shadow(0 0 3px #f6b62c); }
+  .label.active text, .label:focus-visible text { fill: #241300; filter: drop-shadow(0 0 3px #f6b62c); }
   @media (hover:hover) { .label:hover text { filter: drop-shadow(0 0 2px #f6b62c); } }
-  #detail { margin: 10px 0 0; padding: 12px 16px; text-align: center; border: 1px solid #8b650e; border-radius: 13px; background: #1e1608; }
-  #detail h2 { margin: 0 0 6px; color: #ffd85b; font-size: clamp(20px, 3.5vw, 27px); }
+  #detail { margin: 10px 0 0; padding: 12px 16px; text-align: center; border: 1px solid #8b650e; border-radius: 13px; background: #fff7cf; color: #241800; }
+  #detail h2 { margin: 0 0 6px; color: #241800; font-size: clamp(20px, 3.5vw, 27px); }
   #detail p { margin: 0; font-size: clamp(17px, 2.4vw, 22px); line-height: 1.5; }
   #explanation { display: block; width: 100%; padding: 0; margin-top: 5px; border: 0; background: transparent; font: inherit; font-size: clamp(19px, 2.6vw, 24px); line-height: 1.5; cursor: pointer; }
   #explanation:focus-visible { outline: 2px solid var(--english); outline-offset: 3px; }
@@ -33,3 +33,5 @@
 .restart:focus-visible { outline:2px solid #fff0b0; outline-offset:2px; }
 
 .ask-gpt { right:auto; left:env(safe-area-inset-left,0px); font-size:17px; }
+
+#detail #explanation, #detail #term [lang=en], #detail #translation { color:#241800; }
