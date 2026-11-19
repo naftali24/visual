@@ -103,13 +103,46 @@
     document.body.append(button);
     return {item, button};
   });
+  // Start at the true anchors on every layout; only unresolved dots repel.
+  function separateTargets(points, minimumDistance, limits){
+    const placed = [];
+    const clamp = (value, low, high) => Math.max(low, Math.min(high, value));
+    for (const point of points) {
+      let position;
+      for (let radius = 0; !position; radius += 3) {
+        const steps = radius ? Math.max(16, Math.ceil(2 * Math.PI * radius / 3)) : 1;
+        for (let step = 0; step < steps; step++) {
+          const angle = step * 2 * Math.PI / steps;
+          const candidate = {
+            x:clamp(point.x + Math.cos(angle) * radius, limits.left, limits.right),
+            y:clamp(point.y + Math.sin(angle) * radius, limits.top, limits.bottom)
+          };
+          if (placed.every(other => Math.hypot(candidate.x-other.x, candidate.y-other.y) >= minimumDistance)) {
+            position = candidate;
+            break;
+          }
+        }
+        // A tiny/hidden viewport may not have room for every target.
+        if (radius > minimumDistance * points.length) position = {...point};
+      }
+      placed.push(position);
+    }
+    return placed;
+  }
   function drawTargets(){
     const bounds = image.getBoundingClientRect();
-    for (const {item, button} of targets) {
+    const visible = targets.filter(({item, button}) => {
       button.hidden = found.includes(item);
-      button.style.left = (bounds.left + item.x * bounds.width) + 'px';
-      button.style.top = (bounds.top + item.y * bounds.height) + 'px';
-    }
+      return !button.hidden;
+    });
+    const positions = separateTargets(visible.map(({item}) => ({
+      x:bounds.left + item.x * bounds.width,
+      y:bounds.top + item.y * bounds.height
+    })), 24, {left:10, top:10, right:Math.max(10, window.innerWidth-10), bottom:Math.max(10, window.innerHeight-10)});
+    visible.forEach(({button}, index) => {
+      button.style.left = positions[index].x + 'px';
+      button.style.top = positions[index].y + 'px';
+    });
     drawCursor();
   }
   window.addEventListener('atlas-layout', drawTargets);
