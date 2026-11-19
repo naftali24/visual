@@ -15,7 +15,17 @@
   function updateLink() {
     const organ = document.querySelector('[aria-pressed="true"] [lang="en"]')?.textContent.trim();
     let prompt;
-    if (link.dataset.category === "football") {
+    if (link.dataset.category === "history") {
+      prompt = language === "he"
+        ? ["אני לומד מתוך ספר ויזואלי של נפתלי.",
+           "הסבר בעברית פשוטה על " + link.dataset.topicHe + ". הצג את תפקיד נשיא המדינה ואת ההקשר ההיסטורי.",
+           organ ? "הנשיא שבחרתי, שהכפתור שלו מואר: " + organ + ". התמקד גם בביוגרפיה שלו, בשנות כהונתו, בפועלו ובאירועים מרכזיים בתקופתו." : "",
+           "הוסף 4–6 עובדות מעניינות, מפתיעות או פיקנטיות שאפשר לאמת. בדוק מקורות אמינים ועדכניים, צרף קישורים, ציין תאריך והבחן בין עובדות לפרשנות. אל תמציא פרטים חסרים."].filter(Boolean).join("\n\n")
+        : ["I am studying with Naftali’s Visual Book. Answer in " + languages[language] + " in plain language.",
+           "Explain " + link.dataset.topicEn + ", the role of Israel’s president and the historical context.",
+           organ ? "Selected president, whose button is highlighted: " + organ + ". Also focus on this person's biography, term of office, public work and key events during the presidency." : "",
+           "Include 4–6 verified interesting or surprising facts. Check reliable current sources, link to them, state the date and distinguish facts from interpretation. Do not invent missing details."].filter(Boolean).join("\n\n");
+    } else if (link.dataset.category === "football") {
       prompt = language === "he"
         ? ["אני לומד על שחקני מכבי חיפה בכדורגל בעונת 2026/27.",
            organ ? "השחקן שבחרתי: " + organ + "." : "הצג סקירה קצרה על שחקני הקבוצה.",
