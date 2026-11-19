@@ -140,6 +140,34 @@
   for(const id of horseBox?["labels","leaders"]:["guides"]){
     observer.observe(document.getElementById(id),{childList:true});
   }
+  let gongAudio;
+  async function playGong(){
+    try {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContext) return;
+      gongAudio ||= new AudioContext();
+      if (gongAudio.state === 'suspended') await gongAudio.resume();
+      const now = gongAudio.currentTime;
+      // Inharmonic, slowly decaying partials give the strike a gong-like ring.
+      for (const [frequency, level, decay] of [[180,.24,2.4],[277,.13,1.9],[389,.08,1.5],[563,.04,1.1],[827,.025,.7]]) {
+        const tone = gongAudio.createOscillator();
+        const envelope = gongAudio.createGain();
+        tone.type = 'sine';
+        tone.frequency.setValueAtTime(frequency * 1.015, now);
+        tone.frequency.exponentialRampToValueAtTime(frequency, now + .25);
+        envelope.gain.setValueAtTime(0, now);
+        envelope.gain.linearRampToValueAtTime(level, now + .008);
+        envelope.gain.exponentialRampToValueAtTime(.0001, now + decay);
+        tone.connect(envelope);
+        envelope.connect(gongAudio.destination);
+        tone.start(now);
+        tone.stop(now + decay + .05);
+        tone.onended = () => { tone.disconnect(); envelope.disconnect(); };
+      }
+    } catch {
+      // The game remains playable when audio is unavailable.
+    }
+  }
   function attempt(x,y){
     const item=queue[0];
     if(!item)return;
@@ -153,6 +181,7 @@
       return;
     }
     found.push(queue.shift());
+    playGong();
     syncRevealed();
     status.textContent=correct+" "+found.length+"/"+items.length;
     currentQuestion();
