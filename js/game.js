@@ -115,6 +115,17 @@
   window.addEventListener('atlas-layout', drawTargets);
   window.addEventListener('resize', drawTargets);
   image.addEventListener('load', drawTargets);
+  window.addEventListener('scroll', drawTargets, {passive:true});
+  // The horse redraws its SVG viewBox and body transform as its width changes.
+  // Reposition the dots after that layout, including image/font loading.
+  new ResizeObserver(drawTargets).observe(figure);
+  if (horseBox) {
+    const layoutObserver = new MutationObserver(drawTargets);
+    layoutObserver.observe(figure, {attributes:true, attributeFilter:['viewBox']});
+    layoutObserver.observe(document.getElementById('body'), {attributes:true, attributeFilter:['transform']});
+  }
+  document.fonts?.ready.then(drawTargets);
+  requestAnimationFrame(drawTargets);
   function syncRevealed(){
     drawTargets();
     if(horseBox){
