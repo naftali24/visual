@@ -15,7 +15,15 @@
   function updateLink() {
     const organ = document.querySelector('[aria-pressed="true"] [lang="en"]')?.textContent.trim();
     let prompt;
-    if (language === "he") {
+    if (link.dataset.category === "geography") {
+      prompt = language === "he"
+        ? ["הסבר בעברית פשוטה על " + link.dataset.topicHe + ". הבחן בין המדינות לטריטוריות ובין הבירה הלאומית לערי הבירה המקומיות.",
+           organ ? "כלול גם את המקום שבחרתי במפה: " + organ + "." : "",
+           "ספר גם על אוסטרליה עצמה והבא 4–6 עובדות גאוגרפיות או היסטוריות מעניינות ומפתיעות, עם קישורים למקורות אמינים."].filter(Boolean).join("\n\n")
+        : ["Answer in " + languages[language] + ". Explain " + link.dataset.topicEn + ", distinguishing states from territories and the national capital from regional capitals.",
+           organ ? "Include the place I selected on the map: " + organ + "." : "",
+           "Also describe Australia and give 4–6 verified surprising facts about its cities, geography or history, with reliable source links."].filter(Boolean).join("\n\n");
+    } else if (language === "he") {
       prompt = [
         "אני לומד מתוך ספר ויזואלי של נפתלי.",
         "הסבר בעברית פשוטה על " + link.dataset.topicHe + ". מה תפקידם של האיברים או המבנים העיקריים, ואיך הם פועלים יחד?",

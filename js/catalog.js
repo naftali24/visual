@@ -20,6 +20,12 @@ const sharkTitles={
   de:"Anatomie des Grönlandhais",ru:"Анатомия гренландской акулы",
   it:"Anatomia dello squalo della Groenlandia",pt:"Anatomia do tubarão-da-Groenlândia"
 };
+const australiaTitles={
+  en:"Australia – States and Major Cities",he:"אוסטרליה-מדינות וערים גדולות",ar:"أستراليا – الولايات والمدن الكبرى",
+  es:"Australia – Estados y ciudades principales",fr:"Australie – États et grandes villes",
+  de:"Australien – Bundesstaaten und Großstädte",ru:"Австралия – штаты и крупные города",
+  it:"Australia – Stati e città principali",pt:"Austrália – Estados e cidades principais"
+};
 let topicTranslationRequest;
 
 function translateCatalog(){
@@ -34,12 +40,12 @@ function translateCatalog(){
   selector.setAttribute("aria-label",languageLabel);
   selector.title=languageLabel;
   selector.parentElement.title=languageLabel;
-  for(const [slug,name] of [["horse",horse],["dog-internal-anatomy",dog],["greenland-shark",sharkTitles[lang] || sharkTitles.he]]){
+  for(const [slug,name] of [["horse",horse],["dog-internal-anatomy",dog],["greenland-shark",sharkTitles[lang] || sharkTitles.he],["australia",australiaTitles[lang] || australiaTitles.he]]){
     const link=topics.get(slug);
     if(link)link.textContent=name;
   }
   topicTranslationRequest?.abort();
-  const extra=[...topics.entries()].filter(([slug])=>slug!=="horse" && slug!=="dog-internal-anatomy" && slug!=="greenland-shark");
+  const extra=[...topics.entries()].filter(([slug])=>slug!=="horse" && slug!=="dog-internal-anatomy" && slug!=="greenland-shark" && slug!=="australia");
   for(const [,link] of extra)link.textContent=lang==="he"?link.dataset.original:link.dataset.english;
   if(!extra.length || lang==="en" || lang==="he")return;
   const request=new AbortController();

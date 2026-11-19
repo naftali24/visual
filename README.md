@@ -26,3 +26,8 @@
 - [אנטומיה כללית של כרישים, Fisheries and Oceans Canada](https://www.dfo-mpo.gc.ca/species-especes/sharks/anatomy-eng.html)
 
 מיקום האיברים באיור הכריש סכמטי. האיור משלב מאפיינים חיצוניים של הכריש הגרינלנדי עם אנטומיה פנימית כללית של כרישים.
+
+## מקורות למפת אוסטרליה
+
+- [מדריך ממשלת אוסטרליה למדינות, לטריטוריות ולערי הבירה](https://immi.homeaffairs.gov.au/citizenship-subsite/files/our-common-bond-testable.pdf)
+- גבולות מנהליים: Australian Bureau of Statistics דרך [geoBoundaries, אוסטרליה ADM1](https://www.geoboundaries.org/api/current/gbOpen/AUS/ADM1/), ברישיון [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). הגבולות הופשטו והוצגו בהיטל שטח שווה.

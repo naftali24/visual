@@ -113,7 +113,10 @@ async function loadTranslations(){
 
 const ordered = [...page.items].sort((a,b)=>a.y-b.y);
 const half = Math.ceil(ordered.length/2);
-for(const [group,top] of [[ordered.slice(0,half),true],[ordered.slice(half),false]]){
+const sections=ordered.some(item=>item.group==="region")
+  ? [[ordered.filter(item=>item.group==="region"),true],[ordered.filter(item=>item.group!=="region"),false]]
+  : [[ordered.slice(0,half),true],[ordered.slice(half),false]];
+for(const [group,top] of sections){
   for(const item of group.sort((a,b)=>a.x-b.x)){
     const button = document.createElement("button");
     button.type = "button";
