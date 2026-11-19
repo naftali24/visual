@@ -15,7 +15,7 @@
       // Measure the explanation in normal flow each time. A previous overlay
       // must not force later, shorter explanations (or larger screens) to overlay.
       detail.classList.remove('atlas-detail-overlay');
-      for (const property of ['left', 'top', 'width', 'height']) detail.style.removeProperty(property);
+      for (const property of ['left', 'top', 'width', 'height', 'max-height']) detail.style.removeProperty(property);
       if (!detail.querySelector('.atlas-close-detail')) {
         const close = document.createElement('button');
         close.type = 'button';
@@ -25,8 +25,7 @@
         close.addEventListener('click', () => { detail.hidden = true; });
         detail.append(close);
       }
-      const needsOverlay = document.body.dataset.detailPlacement !== 'below' &&
-        main.offsetHeight > height - inset * 2;
+      const needsOverlay = main.offsetHeight > height - inset * 2;
       const active = document.querySelector('.items button[aria-pressed="true"], #labels .label.active');
       if (active && needsOverlay) {
         const top = active.closest('#above') || (active.dataset.index !== undefined && Number(active.dataset.index) < 6);
@@ -42,7 +41,7 @@
           const bottom = Math.max(...boxes.map(box => box.bottom));
           detail.classList.add('atlas-detail-overlay');
           Object.assign(detail.style, {left:(left-parent.left)/factor+'px', top:(y-parent.top)/factor+'px',
-            width:(right-left)/factor+'px', height:(bottom-y)/factor+'px'});
+            width:(right-left)/factor+'px', maxHeight:(bottom-y)/factor+'px'});
         }
       }
     }
@@ -61,7 +60,7 @@
     body{padding:0}body>main{position:absolute;margin:0;max-width:none;
     transform-origin:top center;padding:4px}
     .restart{width:44px;height:44px}
-    #detail{position:relative;padding-right:80px;min-height:88px}
+    #detail{position:relative;padding-right:80px;height:auto;min-height:0}
     #detail.atlas-detail-overlay{position:absolute;min-height:0;z-index:10;margin:0;padding:10px 12px;
       overflow:auto;overscroll-behavior:contain;border-radius:6px;padding-right:80px}
     #detail .atlas-close-detail{position:absolute;right:0;top:0;width:64px;height:64px;
