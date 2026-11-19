@@ -9,7 +9,7 @@
   .language-picker .atlas-icon { width: 100%; height: 100%; pointer-events: none; filter: drop-shadow(0 0 5px #ffc94390); }
   .language-picker select { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
   .language-picker:focus-within { outline: 2px solid #f1cf70; outline-offset: 3px; }
-  .stage { border: 1px solid #8b650e; border-radius: 17px; overflow: hidden; background: #030302; }
+  .stage { border: 1px solid #8b650e; border-radius: 17px; overflow: hidden; background: #dedede; }
   svg { display: block; width: 100%; height: auto; }
   .connector { vector-effect: non-scaling-stroke; fill: none; stroke: #e06c4c; stroke-width: 1.15; opacity: .88; }
   .connector.active { stroke: #ffd85b; stroke-width: 3; opacity: 1; }
