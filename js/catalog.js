@@ -101,7 +101,7 @@ for(const link of document.querySelectorAll("#topic-links a")){
   if(!slug)continue;
   topics.set(slug,link);
   link.dataset.original=link.textContent.trim();
-  link.dataset.english=slug==="israel-presidents-2026"?"Presidents of Israel — through 2026":slug==="flying-roadster"?"Musk – The Flying Car":slug.replace(/-\d{8}-[a-f0-9]{6}$/,"")
+  link.dataset.english=slug==="maccabi-haifa-26-squad-1"?"Maccabi Haifa 26 — Squad 1":slug==="maccabi-haifa-26-squad-2"?"Maccabi Haifa 26 — Squad 2":slug==="israel-presidents-2026"?"Presidents of Israel — through 2026":slug==="flying-roadster"?"Musk – The Flying Car":slug.replace(/-\d{8}-[a-f0-9]{6}$/,"")
     .split("-").map(word=>word.charAt(0).toUpperCase()+word.slice(1)).join(" ");
   link.addEventListener("click",event=>{
     if(event.ctrlKey || event.metaKey || event.shiftKey || event.altKey)return;
