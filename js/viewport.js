@@ -12,9 +12,22 @@
     main.style.width = Math.min(1050, width) + 'px';
     const detail = document.getElementById('detail');
     if (detail && !detail.hidden && !document.documentElement.classList.contains('atlas-playing')) {
-      // Explanations cover the opposite button bank instead of adding a row.
+      // Measure the explanation in normal flow each time. A previous overlay
+      // must not force later, shorter explanations (or larger screens) to overlay.
+      detail.classList.remove('atlas-detail-overlay');
+      for (const property of ['left', 'top', 'width', 'height']) detail.style.removeProperty(property);
+      if (!detail.querySelector('.atlas-close-detail')) {
+        const close = document.createElement('button');
+        close.type = 'button';
+        close.className = 'atlas-close-detail';
+        close.textContent = '×';
+        close.setAttribute('aria-label', 'Close / סגירה');
+        close.addEventListener('click', () => { detail.hidden = true; });
+        detail.append(close);
+      }
+      const needsOverlay = main.offsetHeight > height - inset * 2;
       const active = document.querySelector('.items button[aria-pressed="true"], #labels .label.active');
-      if (active && (detail.classList.contains('atlas-detail-overlay') || main.offsetHeight > height - inset * 2)) {
+      if (active && needsOverlay) {
         const top = active.closest('#above') || (active.dataset.index !== undefined && Number(active.dataset.index) < 6);
         const bank = document.getElementById(top ? 'below' : 'above');
         const labels = bank ? [bank] : [...document.querySelectorAll('#labels .label')].filter(node => (Number(node.dataset.index) < 6) !== Boolean(top));
@@ -27,15 +40,6 @@
           const y = Math.min(...boxes.map(box => box.top));
           const bottom = Math.max(...boxes.map(box => box.bottom));
           detail.classList.add('atlas-detail-overlay');
-          if (!detail.querySelector('.atlas-close-detail')) {
-            const close = document.createElement('button');
-            close.type = 'button';
-            close.className = 'atlas-close-detail';
-            close.textContent = '×';
-            close.setAttribute('aria-label', 'Close / סגירה');
-            close.addEventListener('click', () => { detail.hidden = true; });
-            detail.append(close);
-          }
           Object.assign(detail.style, {left:(left-parent.left)/factor+'px', top:(y-parent.top)/factor+'px',
             width:(right-left)/factor+'px', height:(bottom-y)/factor+'px'});
         }
@@ -56,7 +60,8 @@
     body{padding:0}body>main{position:absolute;margin:0;max-width:none;
     transform-origin:top center;padding:4px}
     .restart{width:44px;height:44px}
-    #detail.atlas-detail-overlay{position:absolute;z-index:10;margin:0;padding:10px 12px;
+    #detail{position:relative;padding-right:80px;min-height:88px}
+    #detail.atlas-detail-overlay{position:absolute;min-height:0;z-index:10;margin:0;padding:10px 12px;
       overflow:auto;overscroll-behavior:contain;border-radius:6px;padding-right:80px}
     #detail .atlas-close-detail{position:absolute;right:0;top:0;width:64px;height:64px;
       border:2px solid #ffda68;border-radius:10px;background:linear-gradient(#ffe788,#d99a16);color:#241300;font:700 48px/1 Arial,sans-serif;cursor:pointer}
