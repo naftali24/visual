@@ -6,3 +6,9 @@
 .atlas-playing #picture, .atlas-playing #horse image { cursor:crosshair; }
 .atlas-game-replay { min-height:44px; padding:5px 12px; margin-top:9px; border:1px solid #d5a43a; border-radius:8px; background:#f8e8ad; color:#241805; font:700 16px Arial,sans-serif; cursor:pointer; }
 .atlas-game [hidden] { display:none!important; }
+
+.atlas-answer-dot { position:fixed; z-index:25; width:22px; height:22px;
+  transform:translate(-50%,-50%); border:2px solid #fff; border-radius:50%;
+  background:#ed2024; box-shadow:0 0 3px #000; padding:0; cursor:pointer; }
+.atlas-answer-dot::before { content:""; position:absolute; inset:-5px; border-radius:50%; }
+.atlas-answer-dot:focus-visible { outline:3px solid #ffda68; outline-offset:3px; }

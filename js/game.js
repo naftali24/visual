@@ -92,7 +92,31 @@
   }
   window.addEventListener("scroll",drawCursor);
   window.addEventListener("resize",drawCursor);
+  const targets = items.map((item, index) => {
+    const button = make('button', 'atlas-answer-dot');
+    button.type = 'button';
+    button.setAttribute('aria-label', (language === 'he' ? 'נקודת תשובה ' : 'Answer point ') + (index + 1));
+    button.addEventListener('click', () => {
+      if (queue[0] !== item) { status.textContent = again; return; }
+      attempt(item.x, item.y);
+    });
+    document.body.append(button);
+    return {item, button};
+  });
+  function drawTargets(){
+    const bounds = image.getBoundingClientRect();
+    for (const {item, button} of targets) {
+      button.hidden = found.includes(item);
+      button.style.left = (bounds.left + item.x * bounds.width) + 'px';
+      button.style.top = (bounds.top + item.y * bounds.height) + 'px';
+    }
+    drawCursor();
+  }
+  window.addEventListener('atlas-layout', drawTargets);
+  window.addEventListener('resize', drawTargets);
+  image.addEventListener('load', drawTargets);
   function syncRevealed(){
+    drawTargets();
     if(horseBox){
       document.querySelectorAll("#labels [data-index], #leaders [data-index]").forEach(node=>{
         node.classList.toggle("atlas-game-unfound",!found.some(item=>item.index===Number(node.dataset.index)));
