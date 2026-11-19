@@ -109,8 +109,8 @@
     const clamp = (value, low, high) => Math.max(low, Math.min(high, value));
     for (const point of points) {
       let position;
-      for (let radius = 0; !position; radius += 3) {
-        const steps = radius ? Math.max(16, Math.ceil(2 * Math.PI * radius / 3)) : 1;
+      for (let radius = 0; !position; radius += 1) {
+        const steps = radius ? Math.max(16, Math.ceil(2 * Math.PI * radius)) : 1;
         for (let step = 0; step < steps; step++) {
           const angle = step * 2 * Math.PI / steps;
           const candidate = {
@@ -138,7 +138,7 @@
     const positions = separateTargets(visible.map(({item}) => ({
       x:bounds.left + item.x * bounds.width,
       y:bounds.top + item.y * bounds.height
-    })), 24, {left:10, top:10, right:Math.max(10, window.innerWidth-10), bottom:Math.max(10, window.innerHeight-10)});
+    })), 11, {left:10, top:10, right:Math.max(10, window.innerWidth-10), bottom:Math.max(10, window.innerHeight-10)});
     visible.forEach(({button}, index) => {
       button.style.left = positions[index].x + 'px';
       button.style.top = positions[index].y + 'px';
