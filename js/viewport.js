@@ -3,6 +3,10 @@
 (() => {
   const main = document.querySelector('main');
   let pending = false;
+  function explanationLayout(totalHeight, detailTop, availableHeight, widthScale) {
+    if ((totalHeight - availableHeight) * widthScale <= 20) return 'flow';
+    return (availableHeight - detailTop) * widthScale >= 96 ? 'scroll' : 'overlay';
+  }
   function fit() {
     pending = false;
     const viewport = window.visualViewport;
@@ -11,10 +15,11 @@
     const inset = 8;
     main.style.width = Math.min(1050, width) + 'px';
     const detail = document.getElementById('detail');
+    let footerSpace = 0;
     if (detail && !detail.hidden && !document.documentElement.classList.contains('atlas-playing')) {
       // Measure the explanation in normal flow each time. A previous overlay
       // must not force later, shorter explanations (or larger screens) to overlay.
-      detail.classList.remove('atlas-detail-overlay');
+      detail.classList.remove('atlas-detail-overlay', 'atlas-detail-scroll');
       for (const property of ['left', 'top', 'width', 'height', 'max-height']) detail.style.removeProperty(property);
       if (!detail.querySelector('.atlas-close-detail')) {
         const close = document.createElement('button');
@@ -25,7 +30,17 @@
         close.addEventListener('click', () => { detail.hidden = true; });
         detail.append(close);
       }
-      const needsOverlay = main.offsetHeight > height - inset * 2;
+      const widthScale = Math.min(1, (width - inset * 2) / main.offsetWidth);
+      // Leave the bottom navigation buttons outside the reading area.
+      footerSpace = 52;
+      const availableHeight = (height - inset * 2 - footerSpace) / widthScale;
+      const mode = explanationLayout(main.offsetHeight, detail.offsetTop, availableHeight, widthScale);
+      if (mode === 'scroll') {
+        detail.classList.add('atlas-detail-scroll');
+        detail.style.height = Math.max(0, availableHeight - detail.offsetTop - 4) + 'px';
+      }
+      const needsOverlay = mode === 'overlay';
+      if (needsOverlay) footerSpace = 0;
       const active = document.querySelector('.items button[aria-pressed="true"], #labels .label.active');
       if (active && needsOverlay) {
         const top = active.closest('#above') || (active.dataset.index !== undefined && Number(active.dataset.index) < 6);
@@ -46,7 +61,7 @@
       }
     }
     const scale = Math.min(1, (width - inset * 2) / main.offsetWidth,
-      (height - inset * 2) / main.offsetHeight);
+      (height - inset * 2 - footerSpace) / main.offsetHeight);
     main.style.transform = `translateX(-50%) scale(${Math.max(.01, scale)})`;
     main.style.top = ((viewport?.offsetTop || 0) + inset) + 'px';
     main.style.left = ((viewport?.offsetLeft || 0) + width / 2) + 'px';
@@ -61,6 +76,7 @@
     transform-origin:top center;padding:4px}
     .restart{width:44px;height:44px}
     #detail{position:relative;padding-right:80px;height:auto;min-height:0}
+    #detail.atlas-detail-scroll{overflow:auto;overscroll-behavior:contain}
     #detail.atlas-detail-overlay{position:absolute;min-height:0;z-index:10;margin:0;padding:10px 12px;
       overflow:auto;overscroll-behavior:contain;border-radius:6px;padding-right:80px}
     #detail .atlas-close-detail{position:absolute;right:0;top:0;width:64px;height:64px;
