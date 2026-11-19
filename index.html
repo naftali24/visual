@@ -4,31 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>ספר ויזואלי של נפתלי</title>
-<link rel="manifest" href="./manifest.webmanifest">
-<link rel="apple-touch-icon" href="./icons/visual-192.png">
+<link rel="manifest" href="./manifest.webmanifest?v=2">
+<link rel="apple-touch-icon" href="./images/icons/visual-192.png">
 <meta name="theme-color" content="#090703">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<style>
-*{box-sizing:border-box}
-body{margin:0;background:#090703;color:#fff;font:16px Arial,sans-serif}
-[hidden]{display:none!important}
-header{background:#120d05;border-bottom:1px solid #a87914;padding:14px 10px}
-.bar{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap}
-h1{margin:0;color:#ffda68;text-shadow:0 0 12px #f8b62d80;font-size:clamp(30px,6vw,46px)}
-.language{display:inline-grid;position:relative;color:#241805;border:1px solid #c69426;border-radius:8px;background:#f8e8ad;font:700 16px Arial,sans-serif}
-#language-width{visibility:hidden;padding:0 24px 0 8px;min-height:44px;white-space:nowrap}
-.language select{position:absolute;inset:0;width:100%;height:100%;padding-inline-start:7px;border:0;border-radius:8px;background:#f8e8ad;color:#241805;font:inherit;cursor:pointer}
-.language:focus-within,:focus-visible{outline:2px solid #ffda68;outline-offset:4px}
-main{max-width:1050px;margin:auto;padding:20px 12px}
-h2{color:#ffda68;text-align:center;margin:0 0 14px;font-size:24px}
-.topic-links,.topic-links ul{display:grid;gap:8px;margin:0;padding:0;list-style:none}
-.topic-links a{display:flex;align-items:center;min-height:50px;max-width:460px;width:100%;margin:auto;padding:10px 18px;border:1px solid #e2b63e;border-radius:10px;background:#f8e8ad;color:#241805!important;font-size:19px;font-weight:800;text-decoration:none}
-.topic-links a:hover{background:#ffd85b}
-.topic-links nav{margin:0!important;padding:0!important}
-#catalog[dir=rtl] .topic-links a{margin-inline-start:0;justify-content:flex-start;text-align:right}
-.topic-links summary{display:none}
-#viewer{display:block;width:100%;height:100vh;height:100dvh;border:0;background:#090703}
-</style>
+<link rel="stylesheet" href="./css/catalog.css?v=1">
 </head>
 <body>
 <div id="catalog" dir="rtl">
@@ -57,114 +37,6 @@ h2{color:#ffda68;text-align:center;margin:0 0 14px;font-size:24px}
 </main>
 </div>
 <iframe id="viewer" title="Atlas topic" allowfullscreen hidden></iframe>
-<script>
-const catalog=document.getElementById("catalog");
-const viewer=document.getElementById("viewer");
-const selector=document.getElementById("language");
-const topics=new Map();
-let lastLink;
-const labels={
-  en:["Naftali’s Visual Book","Topics","Horse – Internal Anatomy","Dog – Internal Anatomy","Atlas language"],
-  he:["ספר ויזואלי של נפתלי","נושאים","סוס-אנטומיה פנימית","כלב-אנטומיה פנימית","שפת האטלס"],
-  ar:["كتاب نفتالي البصري","الموضوعات","التشريح الداخلي للحصان","التشريح الداخلي للكلب","لغة الأطلس"],
-  es:["El libro visual de Naftali","Temas","Anatomía interna del caballo","Anatomía interna del perro","Idioma del atlas"],
-  fr:["Le livre visuel de Naftali","Sujets","Anatomie interne du cheval","Anatomie interne du chien","Langue de l’atlas"],
-  de:["Naftalis visuelles Buch","Themen","Innere Anatomie des Pferdes","Innere Anatomie des Hundes","Sprache des Atlas"],
-  ru:["Визуальная книга Нафтали","Темы","Внутренняя анатомия лошади","Внутренняя анатомия собаки","Язык атласа"],
-  it:["Il libro visivo di Naftali","Argomenti","Anatomia interna del cavallo","Anatomia interna del cane","Lingua dell’atlante"],
-  pt:["O livro visual de Naftali","Temas","Anatomia interna do cavalo","Anatomia interna do cão","Idioma do atlas"]
-};
-let topicTranslationRequest;
-
-function translateCatalog(){
-  const lang=selector.value;
-  const [title,heading,horse,dog,languageLabel]=labels[lang] || labels.he;
-  document.getElementById("language-width").textContent=selector.options[selector.selectedIndex].textContent;
-  document.documentElement.lang=lang;
-  catalog.dir=["he","ar"].includes(lang)?"rtl":"ltr";
-  document.title=title;
-  document.getElementById("catalog-title").textContent=title;
-  document.getElementById("topic-heading").textContent=heading;
-  selector.setAttribute("aria-label",languageLabel);
-  selector.title=languageLabel;
-  selector.parentElement.title=languageLabel;
-  for(const [slug,name] of [["horse",horse],["dog-internal-anatomy",dog]]){
-    const link=topics.get(slug);
-    if(link)link.textContent=name;
-  }
-  topicTranslationRequest?.abort();
-  const extra=[...topics.entries()].filter(([slug])=>slug!=="horse" && slug!=="dog-internal-anatomy");
-  for(const [,link] of extra)link.textContent=lang==="he"?link.dataset.original:link.dataset.english;
-  if(!extra.length || lang==="en" || lang==="he")return;
-  const request=new AbortController();
-  topicTranslationRequest=request;
-  const timeout=setTimeout(()=>request.abort(),6500);
-  const query=new URLSearchParams({client:"gtx",sl:"en",tl:lang,dt:"t",q:extra.map(([,link])=>link.dataset.english).join("\\n")});
-  fetch("https://translate.googleapis.com/translate_a/single?"+query,{signal:request.signal})
-    .then(response=>{if(!response.ok)throw Error("Translation unavailable");return response.json();})
-    .then(data=>{
-      const lines=data[0].map(segment=>segment[0]).join("").trim().split(/\\r?\\n/);
-      if(selector.value===lang && lines.length===extra.length && lines.every(line=>line.trim())){
-        extra.forEach(([,link],i)=>{link.textContent=lines[i].trim();});
-      }
-    }).catch(()=>{}).finally(()=>clearTimeout(timeout));
-}
-let languagePreference=new URLSearchParams(location.search).get("lang");
-if(!languagePreference){
-  try { languagePreference=localStorage.getItem("visualLanguage"); } catch {}
-}
-selector.value=Object.hasOwn(labels,languagePreference)?languagePreference:"he";
-function changeLanguage(){
-  try { localStorage.setItem("visualLanguage",selector.value); } catch {}
-  const address=new URL(location.href);
-  address.searchParams.set("lang",selector.value);
-  history.replaceState(null,"",address);
-  translateCatalog();
-}
-selector.addEventListener("input",changeLanguage);
-selector.addEventListener("change",changeLanguage);
-for(const link of document.querySelectorAll("#topic-links a")){
-  const slug=link.getAttribute("href").match(/^\.\/topics\/([a-z0-9-]+)\/(?:index\.html)?$/)?.[1];
-  if(!slug)continue;
-  topics.set(slug,link);
-  link.dataset.original=link.textContent.trim();
-  link.dataset.english=slug.replace(/-\d{8}-[a-f0-9]{6}$/,"")
-    .split("-").map(word=>word.charAt(0).toUpperCase()+word.slice(1)).join(" ");
-  link.addEventListener("click",event=>{
-    if(event.ctrlKey || event.metaKey || event.shiftKey || event.altKey)return;
-    event.preventDefault();
-    lastLink=link;
-    history.pushState(null,"","#"+slug);
-    renderTopic();
-  });
-}
-function renderTopic(){
-  const link=topics.get(location.hash.slice(1));
-  if(!link){
-    const wasViewing=!viewer.hidden;
-    viewer.hidden=true;
-    viewer.removeAttribute("src");
-    catalog.hidden=false;
-    if(wasViewing)lastLink?.focus();
-    return;
-  }
-  const source=new URL(link.href);
-  source.searchParams.set("lang",selector.value);
-  if(viewer.src!==source.href)viewer.src=source.href;
-  viewer.title=link.textContent.trim();
-  catalog.hidden=true;
-  viewer.hidden=false;
-  window.scrollTo(0,0);
-}
-window.addEventListener("popstate",renderTopic);
-window.addEventListener("message",event=>{
-  if(viewer.hidden || event.source!==viewer.contentWindow || event.origin!==location.origin ||
-     event.data!=="visual-atlas-home")return;
-  history.replaceState(null,"",location.pathname+location.search);
-  renderTopic();
-});
-translateCatalog();
-renderTopic();
-</script>
+<script src="./js/catalog.js?v=1"></script>
 </body>
 </html>

@@ -11,7 +11,7 @@
   "theme_color": "#090703",
   "background_color": "#090703",
   "icons": [
-    {"src": "./icons/visual-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
-    {"src": "./icons/visual-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"}
+    {"src": "./images/icons/visual-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "./images/icons/visual-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"}
   ]
 }
