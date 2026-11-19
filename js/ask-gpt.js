@@ -15,7 +15,16 @@
   function updateLink() {
     const organ = document.querySelector('[aria-pressed="true"] [lang="en"]')?.textContent.trim();
     let prompt;
-    if (link.dataset.category === "geography") {
+    if (link.dataset.category === "technology") {
+      prompt = language === "he"
+        ? ["הסבר בעברית פשוטה על המכונית המעופפת של אילון מאסק וטסלה רודסטר: המערכות העיקריות, הנעה חשמלית ודחף בגז דחוס.",
+           organ ? "התייחס גם לפריט שבחרתי: " + organ + "." : "",
+           "בדוק מקורות עדכניים והבחן בין מה שהודגם בפועל, טענות היצרן ותוכניות עתידיות. האם הודגמה טיסה ממושכת? מה מצב הייצור והאישורים? אל תמציא מפרט או מיקום של רכיבים פנימיים מתוך ההמחשה.",
+           "ספר גם בקצרה על מאסק ועל שיתוף הפעולה בין טסלה ל-SpaceX. הבא 4–6 עובדות מעניינות ומאומתות וקישורים למקורות אמינים."].filter(Boolean).join("\n\n")
+        : ["Answer in " + languages[language] + ". Explain Elon Musk's Tesla Roadster flying-car concept, electric propulsion and cold-gas thrust.",
+           organ ? "Also explain the selected feature: " + organ + "." : "",
+           "Check current reliable sources. Distinguish demonstrated maneuvers from manufacturer claims and future plans. Explain sustained-flight evidence, production and approval status. Do not infer internal component positions from the conceptual illustration. Include brief background on Musk and Tesla/SpaceX cooperation, plus 4–6 verified surprising facts with sources."].filter(Boolean).join("\n\n");
+    } else if (link.dataset.category === "geography") {
       prompt = language === "he"
         ? ["הסבר בעברית פשוטה על " + link.dataset.topicHe + ". הבחן בין המדינות לטריטוריות ובין הבירה הלאומית לערי הבירה המקומיות.",
            organ ? "כלול גם את המקום שבחרתי במפה: " + organ + "." : "",
