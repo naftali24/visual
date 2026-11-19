@@ -1,12 +1,8 @@
-.atlas-playing body > main, .atlas-playing #ask-gpt { display:none!important; }
-.atlas-game { max-width:1050px; margin:auto; padding:10px 8px 56px; text-align:center; }
-.atlas-game-question { color:#ffda68; font:800 clamp(30px,7vw,49px)/1.15 Arial,sans-serif; margin:10px 0 5px; }
-.atlas-game-feedback { min-height:1.35em; margin:0 0 6px; color:#fff0b0; font:700 16px Arial,sans-serif; }
-.atlas-game-image { position:relative; width:fit-content; max-width:100%; margin:auto; }
-.atlas-game-image:focus-visible { outline:2px solid #ffda68; outline-offset:2px; }
-.atlas-game-image img { display:block; width:auto; height:auto; max-width:100%; max-height:calc(100dvh - 110px); margin:auto; cursor:crosshair; border-radius:10px; }
-.atlas-game-revealed { display:flex; justify-content:center; gap:6px; flex-wrap:wrap; }
-.atlas-game-tag { display:block; max-width:100%; min-height:36px; padding:4px 8px; border:1px solid #d5a43a; border-radius:6px; background:#211609; color:#9bdcff; font:800 clamp(13px,2.8vw,17px)/1.15 Arial,sans-serif; overflow-wrap:anywhere; cursor:pointer; }
-.atlas-game-cursor { position:absolute; width:16px; height:16px; transform:translate(-50%,-50%); border:2px solid #fff6cc; border-radius:50%; pointer-events:none; }
+.atlas-playing #detail, .atlas-playing #translationStatus { display:none!important; }
+.atlas-playing .atlas-game-unfound { visibility:hidden; pointer-events:none; }
+.atlas-game { margin:10px 0 0; padding:12px 16px; text-align:center; border:1px solid #8b650e; border-radius:13px; background:#1e1608; }
+.atlas-game-question { color:#ffda68; font:800 clamp(30px,7vw,49px)/1.15 Arial,sans-serif; margin:0 0 6px; }
+.atlas-game-feedback { min-height:1.35em; margin:0; color:#fff0b0; font:700 16px Arial,sans-serif; }
+.atlas-playing #picture, .atlas-playing #horse image { cursor:crosshair; }
 .atlas-game-replay { min-height:44px; padding:5px 12px; margin-top:9px; border:1px solid #d5a43a; border-radius:8px; background:#f8e8ad; color:#241805; font:700 16px Arial,sans-serif; cursor:pointer; }
 .atlas-game [hidden] { display:none!important; }

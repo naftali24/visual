@@ -20,7 +20,8 @@
     it: ["Dov’è questo elemento?", "Esatto!", "Riprova", "Hai trovato tutto!", "Gioca ancora"],
     pt: ["Onde fica este elemento?", "Correto!", "Tente de novo", "Encontrou tudo!", "Jogar novamente"]
   };
-  const preference = parameters.get("lang");
+  let preference = parameters.get("lang");
+  if(!preference){try{preference=localStorage.getItem("visualLanguage");}catch{}}
   const language = Object.hasOwn(copy, preference) ? preference : "he";
   const [question, correct, again, complete, replayText] = copy[language];
   const horseBox = window.atlasButtons && !window.atlasPage ? [
@@ -32,7 +33,7 @@
       (item.anchor[0]-horseBox[0])/horseBox[2],
       (item.anchor[1]-horseBox[1])/horseBox[3]
     ] : [item.x/1000,item.y/1000];
-    return {x,y,en:item.en,name:language==="he"?item.he:item.en};
+    return {id:item.id,index:entries.indexOf(item),x,y,en:item.en,name:language==="he"?item.he:item.en};
   });
   const make = (tag, className) => Object.assign(document.createElement(tag), {className});
   const game = make("section","atlas-game");
@@ -43,28 +44,20 @@
   heading.setAttribute("aria-live","polite");
   const status = make("p","atlas-game-feedback");
   status.setAttribute("role","status");
-  const figure = make("div","atlas-game-image");
+  const figure = photo.closest("svg") || photo;
   figure.tabIndex = 0;
-  figure.setAttribute("role","group");
   figure.setAttribute("aria-labelledby",heading.id);
-  const image = make("img","");
-  image.alt = "";
-  image.draggable = false;
-  const pointer = make("span","atlas-game-cursor");
-  pointer.setAttribute("aria-hidden","true");
-  pointer.hidden = true;
-  const revealed = make("div","atlas-game-revealed");
+  const image = photo;
   const replay = make("button","atlas-game-replay");
   replay.type = "button";
   replay.textContent = replayText;
-  figure.append(image,pointer);
-  game.append(figure,heading,status,revealed,replay);
-  document.body.append(game);
+  game.append(heading,status,replay);
+  const detail = document.getElementById("detail");
+  detail.insertAdjacentElement("afterend",game);
   document.documentElement.classList.add("atlas-playing");
 
   let queue, cursor;
   const found = [];
-  const tags = new Map();
   function currentQuestion(){
     const item = queue[0];
     heading.textContent = item ? item.name : complete;
@@ -78,19 +71,50 @@
       [queue[i],queue[j]]=[queue[j],queue[i]];
     }
     found.length=0;
-    tags.clear();
     cursor=null;
     status.textContent="";
-    revealed.replaceChildren();
+    syncRevealed();
     currentQuestion();
     drawCursor();
   }
 
+  const pointer=document.createElementNS("http://www.w3.org/2000/svg","svg");
+  pointer.setAttribute("aria-hidden","true");
+  pointer.style.cssText="position:fixed;width:18px;height:18px;pointer-events:none;z-index:30;overflow:visible";
+  pointer.innerHTML='<circle cx="9" cy="9" r="7" fill="none" stroke="#ffda68" stroke-width="2"/>';
+  document.body.append(pointer);
   function drawCursor(){
-    pointer.hidden = !cursor;
+    pointer.style.display=cursor?"block":"none";
     if(!cursor)return;
-    pointer.style.left = cursor.x*100+"%";
-    pointer.style.top = cursor.y*100+"%";
+    const bounds=image.getBoundingClientRect();
+    pointer.style.left=(bounds.left+cursor.x*bounds.width-9)+"px";
+    pointer.style.top=(bounds.top+cursor.y*bounds.height-9)+"px";
+  }
+  window.addEventListener("scroll",drawCursor);
+  window.addEventListener("resize",drawCursor);
+  function syncRevealed(){
+    if(horseBox){
+      document.querySelectorAll("#labels [data-index], #leaders [data-index]").forEach(node=>{
+        node.classList.toggle("atlas-game-unfound",!found.some(item=>item.index===Number(node.dataset.index)));
+      });
+    }else{
+      const nodes=[...document.querySelectorAll("#above button, #below button")];
+      // Match the rendered order, which is grouped and sorted by the atlas.
+      const ordered=[...entries].sort((a,b)=>a.y-b.y);
+      const half=Math.ceil(ordered.length/2);
+      const groups=ordered.some(item=>item.group==="region")
+        ? [ordered.filter(item=>item.group==="region"),ordered.filter(item=>item.group!=="region")]
+        : [ordered.slice(0,half),ordered.slice(half)];
+      const rendered=groups.flatMap(group=>group.sort((a,b)=>a.x-b.x));
+      nodes.forEach((node,i)=>node.classList.toggle("atlas-game-unfound",!found.some(item=>item.id===rendered[i]?.id)));
+      document.querySelectorAll("#guides line").forEach((node,i)=>{
+        node.classList.toggle("atlas-game-unfound",!found.some(item=>item.id===entries[i]?.id));
+      });
+    }
+  }
+  const observer=new MutationObserver(syncRevealed);
+  for(const id of horseBox?["labels","leaders"]:["guides"]){
+    observer.observe(document.getElementById(id),{childList:true});
   }
   function attempt(x,y){
     const item=queue[0];
@@ -104,19 +128,8 @@
       status.textContent=again;
       return;
     }
-    const tag=make("button","atlas-game-tag");
-    tag.type="button";
-    tag.textContent=item.name;
-    tag.addEventListener("click",()=>{
-      if(!window.speechSynthesis || typeof SpeechSynthesisUtterance!=="function")return;
-      const speech=new SpeechSynthesisUtterance(item.en);
-      speech.lang="en-US";
-      window.speechSynthesis.cancel();
-      window.speechSynthesis.speak(speech);
-    });
-    tags.set(item,tag);
-    revealed.append(tag);
     found.push(queue.shift());
+    syncRevealed();
     status.textContent=correct+" "+found.length+"/"+items.length;
     currentQuestion();
     drawCursor();
@@ -142,7 +155,7 @@
   });
   replay.addEventListener("click",reset);
   reset();
-  image.src=photo.getAttribute("href") || photo.getAttribute("src");
+
 
   if(language==="en" || language==="he")return;
   const controller=new AbortController();
@@ -155,7 +168,6 @@
       if(lines.length!==items.length || lines.some(line=>!line.trim()))return;
       items.forEach((item,i)=>{
         item.name=lines[i].trim();
-        if(tags.has(item))tags.get(item).textContent=item.name;
       });
       currentQuestion();
     }).catch(()=>{}).finally(()=>clearTimeout(timeout));
