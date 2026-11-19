@@ -62,7 +62,7 @@ window.atlasPage = {
     },
     {
       "id": "act",
-      "en": "Australian Capital Territory",
+      "en": "Capital Territory",
       "he": "טריטוריית הבירה האוסטרלית",
       "x": 853.233,
       "y": 771.942,
