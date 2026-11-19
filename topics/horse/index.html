@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Horse Anatomy</title>
+<link rel="stylesheet" href="../../styles.css">
+
+</head>
+<body>
+<button type="button" class="restart" id="restart">↻ Restart</button>
+<main id="horse-atlas"><div class="stage">
+<svg id="horse" viewBox="0 0 800 465" aria-labelledby="figureTitle">
+<title id="figureTitle">Side-view diagram of a horse’s internal organs</title>
+<g id="body"><image href="../../images/horse-anatomy.webp" x="0" y="22" width="710" height="420" preserveAspectRatio="none" aria-hidden="true"/></g>
+<g id="leaders" aria-hidden="true"></g><g id="labels"></g>
+</svg></div>
+<p id="translationStatus" role="status" hidden></p>
+<section id="detail" aria-live="polite" hidden>
+  <h2 id="term"></h2>
+  <p id="translation" dir="auto"></p>
+  <button type="button" id="explanation" lang="en" title="Read aloud"></button>
+</section>
+</main>
+<script src="../../data/horse/atlasButtons.js"></script>
+<script src="../../data/horse/atlasExplanations.js"></script>
+<script src="../../app.js"></script>
+</body>
+</html>

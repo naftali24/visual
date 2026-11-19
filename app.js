@@ -6,7 +6,7 @@ const parts=window.atlasButtons.map(button=>{
   return {...button,enInfo:explanation.en,heInfo:explanation.he};
 });
 let selected=null;
-let language="he";
+let language="en";
 let translations=[];
 let translationRequest;
 const cache=new Map();
@@ -174,31 +174,19 @@ function drawLabels(){
 $("explanation").addEventListener("click",()=>{
   if(selected!==null)speak(parts[selected].enInfo);
 });
-const atlasMenu=$("atlas-menu");
-atlasMenu.querySelector("a[href='#horse-atlas']").addEventListener("click",()=>{
-  atlasMenu.open=false;
-});
-atlasMenu.addEventListener("keydown",event=>{
-  if(event.key==="Escape" && atlasMenu.open){
-    atlasMenu.open=false;
-    atlasMenu.querySelector("summary").focus();
-  }
-});
 $("restart").addEventListener("click",()=>{
   selected=null;
   window.speechSynthesis?.cancel();
   $("detail").hidden=true;
-  atlasMenu.open=false;
-  if(language!=="he"){
-    $("language").value="he";
-    loadLanguage("he");
-  }else{
-    highlight();
-  }
+  highlight();
   window.scrollTo(0,0);
 });
-$("language").addEventListener("change",event=>loadLanguage(event.target.value));
-loadLanguage($("language").value || "he");
+const supportedLanguages=["en","he","ar","es","fr","de","ru","it","pt"];
+let preference=new URLSearchParams(location.search).get("lang");
+if(!preference){
+  try { preference=localStorage.getItem("visualLanguage"); } catch {}
+}
+loadLanguage(supportedLanguages.includes(preference)?preference:"en");
 if(phone.addEventListener)phone.addEventListener("change",drawLabels);
 else phone.addListener(drawLabels);
 window.addEventListener("resize",()=>{
