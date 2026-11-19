@@ -8,7 +8,7 @@ window.atlasPage = {
       "id": "wa",
       "en": "Western Australia",
       "he": "מערב אוסטרליה",
-      "x": 302,
+      "x": 229.867,
       "y": 458,
       "group": "region"
     },
@@ -16,7 +16,7 @@ window.atlasPage = {
       "id": "nt",
       "en": "Northern Territory",
       "he": "הטריטוריה הצפונית",
-      "x": 467,
+      "x": 493.867,
       "y": 297,
       "group": "region"
     },
@@ -24,7 +24,7 @@ window.atlasPage = {
       "id": "sa",
       "en": "South Australia",
       "he": "דרום אוסטרליה",
-      "x": 495,
+      "x": 538.667,
       "y": 577,
       "group": "region"
     },
@@ -32,7 +32,7 @@ window.atlasPage = {
       "id": "qld",
       "en": "Queensland",
       "he": "קווינסלנד",
-      "x": 652,
+      "x": 789.867,
       "y": 388,
       "group": "region"
     },
@@ -40,7 +40,7 @@ window.atlasPage = {
       "id": "nsw",
       "en": "New South Wales",
       "he": "ניו סאות׳ ויילס",
-      "x": 636,
+      "x": 764.267,
       "y": 639,
       "group": "region"
     },
@@ -48,7 +48,7 @@ window.atlasPage = {
       "id": "vic",
       "en": "Victoria",
       "he": "ויקטוריה",
-      "x": 612,
+      "x": 725.867,
       "y": 752,
       "group": "region"
     },
@@ -56,7 +56,7 @@ window.atlasPage = {
       "id": "tas",
       "en": "Tasmania",
       "he": "טסמניה",
-      "x": 635,
+      "x": 762.667,
       "y": 885,
       "group": "region"
     },
@@ -64,7 +64,7 @@ window.atlasPage = {
       "id": "act",
       "en": "Australian Capital Territory",
       "he": "טריטוריית הבירה האוסטרלית",
-      "x": 683,
+      "x": 839.467,
       "y": 738,
       "group": "region"
     },
@@ -72,7 +72,7 @@ window.atlasPage = {
       "id": "perth",
       "en": "Perth",
       "he": "פרת׳",
-      "x": 225,
+      "x": 106.667,
       "y": 648,
       "group": "city"
     },
@@ -80,7 +80,7 @@ window.atlasPage = {
       "id": "darwin",
       "en": "Darwin",
       "he": "דרווין",
-      "x": 432,
+      "x": 437.867,
       "y": 134,
       "group": "city"
     },
@@ -88,7 +88,7 @@ window.atlasPage = {
       "id": "adelaide",
       "en": "Adelaide",
       "he": "אדלייד",
-      "x": 542,
+      "x": 613.867,
       "y": 705,
       "group": "city"
     },
@@ -96,7 +96,7 @@ window.atlasPage = {
       "id": "melbourne",
       "en": "Melbourne",
       "he": "מלבורן",
-      "x": 624,
+      "x": 745.067,
       "y": 787,
       "group": "city"
     },
@@ -104,7 +104,7 @@ window.atlasPage = {
       "id": "hobart",
       "en": "Hobart",
       "he": "הובארט",
-      "x": 645,
+      "x": 778.667,
       "y": 916,
       "group": "city"
     },
@@ -112,7 +112,7 @@ window.atlasPage = {
       "id": "canberra",
       "en": "Canberra",
       "he": "קנברה",
-      "x": 685,
+      "x": 842.667,
       "y": 734,
       "group": "city"
     },
@@ -120,7 +120,7 @@ window.atlasPage = {
       "id": "sydney",
       "en": "Sydney",
       "he": "סידני",
-      "x": 716,
+      "x": 892.267,
       "y": 705,
       "group": "city"
     },
@@ -128,7 +128,7 @@ window.atlasPage = {
       "id": "newcastle",
       "en": "Newcastle",
       "he": "ניוקאסל",
-      "x": 727,
+      "x": 909.867,
       "y": 683,
       "group": "city"
     },
@@ -136,7 +136,7 @@ window.atlasPage = {
       "id": "gold-coast",
       "en": "Gold Coast",
       "he": "גולד קוסט",
-      "x": 763,
+      "x": 967.467,
       "y": 565,
       "group": "city"
     },
@@ -144,7 +144,7 @@ window.atlasPage = {
       "id": "brisbane",
       "en": "Brisbane",
       "he": "בריזבן",
-      "x": 759,
+      "x": 961.067,
       "y": 550,
       "group": "city"
     }
