@@ -186,7 +186,11 @@ let preference=new URLSearchParams(location.search).get("lang");
 if(!preference){
   try { preference=localStorage.getItem("visualLanguage"); } catch {}
 }
-loadLanguage(supportedLanguages.includes(preference)?preference:"en");
+const initialLanguage=supportedLanguages.includes(preference)?preference:"en";
+const resetLabels={en:"Restart",he:"התחל מחדש",ar:"إعادة البدء",es:"Reiniciar",fr:"Recommencer",de:"Neu starten",ru:"Начать заново",it:"Ricomincia",pt:"Reiniciar"};
+$("restart").setAttribute("aria-label",resetLabels[initialLanguage]);
+$("restart").title=resetLabels[initialLanguage];
+loadLanguage(initialLanguage);
 if(phone.addEventListener)phone.addEventListener("change",drawLabels);
 else phone.addListener(drawLabels);
 window.addEventListener("resize",()=>{

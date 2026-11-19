@@ -27,14 +27,14 @@ h2 { color: #ffd85b; margin: 0 0 8px; font-size: 22px; }
 #detail p { margin: 0 0 7px; font-size: 19px; }
 #englishInfo { cursor: pointer; border: 0; background: transparent; color: #9bdcff; font: inherit; font-size: 19px; }
 [hidden] { display: none !important; }
-.restart { position:fixed; top:max(8px,env(safe-area-inset-top)); right:max(8px,env(safe-area-inset-right)); z-index:20; min-height:44px; padding:6px 12px; border:1px solid #e2b63e; border-radius:9px; background:#f8e8ad; color:#241805; font:700 16px Arial,sans-serif; cursor:pointer; }
+.restart { position:fixed; top:max(8px,env(safe-area-inset-top)); right:max(8px,env(safe-area-inset-right)); z-index:20; width:64px; height:64px; padding:0; border:1px solid #e2b63e; border-radius:9px; background:#f8e8ad; color:#241805; font:700 38px/1 Arial,sans-serif; cursor:pointer; }
 .restart:hover { background:#ffd85b; }
 .restart:focus-visible { outline:2px solid #fff0b0; outline-offset:2px; }
-body:has(> .restart) main { padding-top:60px; }
+body:has(> .restart) main { padding-top:82px; }
 </style>
 </head>
 <body>
-<button type="button" class="restart" id="restart">↻ Restart</button>
+<button type="button" class="restart" id="restart" aria-label="Restart" title="Restart">↻</button>
 <main>
 <div id="stage" dir="ltr">
   <div class="items" id="above"></div>
@@ -66,6 +66,9 @@ if(!requestedLanguage){
   try { requestedLanguage=localStorage.getItem("visualLanguage"); } catch {}
 }
 const language=supportedLanguages.includes(requestedLanguage)?requestedLanguage:"en";
+const resetLabels={en:"Restart",he:"התחל מחדש",ar:"إعادة البدء",es:"Reiniciar",fr:"Recommencer",de:"Neu starten",ru:"Начать заново",it:"Ricomincia",pt:"Reiniciar"};
+get("restart").setAttribute("aria-label",resetLabels[language]);
+get("restart").title=resetLabels[language];
 let translations=language==="he"?Object.fromEntries(page.items.map(item=>[item.id,{
   name:item.he,info:notes[item.id].he
 }])):{};

@@ -28,7 +28,7 @@
   #explanation, #term [lang=en], #translationStatus { color: var(--english); }
   #translationStatus { margin: 8px 0; text-align: center; color: #f1cf70; font-size: 14px; }
 
-.restart { position:fixed; top:max(8px,env(safe-area-inset-top)); right:max(8px,env(safe-area-inset-right)); z-index:20; min-height:44px; padding:6px 12px; border:1px solid #e2b63e; border-radius:9px; background:#f8e8ad; color:#241805; font:700 16px Arial,sans-serif; cursor:pointer; }
+.restart { position:fixed; top:max(8px,env(safe-area-inset-top)); right:max(8px,env(safe-area-inset-right)); z-index:20; width:64px; height:64px; padding:0; border:1px solid #e2b63e; border-radius:9px; background:#f8e8ad; color:#241805; font:700 38px/1 Arial,sans-serif; cursor:pointer; }
 .restart:hover { background:#ffd85b; }
 .restart:focus-visible { outline:2px solid #fff0b0; outline-offset:2px; }
-body:has(> .restart) main { padding-top:60px; }
+body:has(> .restart) main { padding-top:82px; }
