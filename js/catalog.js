@@ -96,6 +96,7 @@ function renderTopic(){
   }
   const source=new URL(link.href);
   source.searchParams.set("lang",selector.value);
+  source.searchParams.set("v","gpt-1");
   if(viewer.src!==source.href)viewer.src=source.href;
   viewer.title=link.textContent.trim();
   catalog.hidden=true;
