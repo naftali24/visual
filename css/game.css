@@ -1,0 +1,14 @@
+.atlas-playing body > main, .atlas-playing #ask-gpt { display:none!important; }
+.atlas-game { max-width:1050px; margin:auto; padding:10px 8px 56px; text-align:center; }
+.atlas-game-question { color:#ffda68; font:800 clamp(21px,4.7vw,34px)/1.25 Arial,sans-serif; margin:3px 0 9px; }
+.atlas-game-feedback { min-height:1.35em; margin:0 0 6px; color:#fff0b0; font:700 16px Arial,sans-serif; }
+.atlas-game-image { position:relative; width:fit-content; max-width:100%; margin:auto; }
+.atlas-game-image:focus-visible { outline:2px solid #ffda68; outline-offset:2px; }
+.atlas-game-image img { display:block; width:auto; height:auto; max-width:100%; max-height:calc(100dvh - 110px); margin:auto; cursor:crosshair; border-radius:10px; }
+.atlas-game-revealed, .atlas-game-guides { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; }
+.atlas-game-tag { position:absolute; display:block; width:max-content; max-width:45%; padding:3px 6px; border:1px solid #d5a43a; border-radius:6px; background:#211609; color:#9bdcff; font:800 clamp(11px,2.4vw,16px)/1.15 Arial,sans-serif; overflow-wrap:anywhere; }
+.atlas-game-guides line { stroke:#ffda68; stroke-width:1; }
+.atlas-game-guides circle { fill:#ffda68; stroke:#211609; stroke-width:1; }
+.atlas-game-guides .cursor { fill:none; stroke:#fff6cc; stroke-width:2; }
+.atlas-game-replay { min-height:44px; padding:5px 12px; margin-top:9px; border:1px solid #d5a43a; border-radius:8px; background:#f8e8ad; color:#241805; font:700 16px Arial,sans-serif; cursor:pointer; }
+.atlas-game [hidden] { display:none!important; }

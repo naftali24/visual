@@ -2,6 +2,23 @@ const catalog=document.getElementById("catalog");
 const viewer=document.getElementById("viewer");
 const selector=document.getElementById("language");
 const topics=new Map();
+const gameToggle=document.getElementById("game-toggle");
+const gameTitles={
+  en:["Game","Choose a topic to play"],he:["משחק","בחר נושא למשחק"],ar:["لعبة","اختر موضوعًا للعب"],
+  es:["Juego","Elige un tema para jugar"],fr:["Jeu","Choisissez un sujet pour jouer"],
+  de:["Spiel","Wähle ein Thema zum Spielen"],ru:["Игра","Выберите тему для игры"],
+  it:["Gioco","Scegli un argomento per giocare"],pt:["Jogo","Escolha um tema para jogar"]
+};
+function gameMode(){
+  return new URLSearchParams(location.search).get("game")==="1";
+}
+gameToggle.addEventListener("click",()=>{
+  const address=new URL(location.href);
+  if(gameMode())address.searchParams.delete("game");
+  else address.searchParams.set("game","1");
+  history.replaceState(null,"",address);
+  translateCatalog();
+});
 let lastLink;
 const labels={
   en:["Naftali’s Visual Book","Topics","Horse – Internal Anatomy","Dog – Internal Anatomy","Atlas language"],
@@ -36,7 +53,11 @@ function translateCatalog(){
   catalog.dir=["he","ar"].includes(lang)?"rtl":"ltr";
   document.title=title;
   document.getElementById("catalog-title").textContent=title;
-  document.getElementById("topic-heading").textContent=heading;
+  const [gameLabel,gameHeading]=gameTitles[lang] || gameTitles.he;
+  gameToggle.setAttribute("aria-label",gameLabel);
+  gameToggle.title=gameLabel;
+  gameToggle.setAttribute("aria-pressed",String(gameMode()));
+  document.getElementById("topic-heading").textContent=gameMode()?gameHeading:heading;
   selector.setAttribute("aria-label",languageLabel);
   selector.title=languageLabel;
   selector.parentElement.title=languageLabel;
@@ -102,7 +123,8 @@ function renderTopic(){
   }
   const source=new URL(link.href);
   source.searchParams.set("lang",selector.value);
-  source.searchParams.set("v","gpt-1");
+  source.searchParams.set("v","game-1");
+  if(gameMode())source.searchParams.set("game","1");
   if(viewer.src!==source.href)viewer.src=source.href;
   viewer.title=link.textContent.trim();
   catalog.hidden=true;
