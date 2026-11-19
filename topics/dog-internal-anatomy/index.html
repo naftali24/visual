@@ -27,12 +27,18 @@ h2 { color: #ffd85b; margin: 0 0 8px; font-size: 22px; }
 #detail p { margin: 0 0 7px; font-size: 19px; }
 #englishInfo { cursor: pointer; border: 0; background: transparent; color: #9bdcff; font: inherit; font-size: 19px; }
 [hidden] { display: none !important; }
-footer { margin-top: 12px; text-align: center; }
-a { color: #9bdcff; }
+.page-actions { display:flex; justify-content:center; gap:8px; flex-wrap:wrap; padding-top:6px; }
+.page-actions :is(button,a) { display:inline-flex; align-items:center; justify-content:center; min-height:44px; border:1px solid #e2b63e; border-radius:9px; background:#f8e8ad; color:#241805; padding:6px 12px; font:700 16px Arial,sans-serif; text-decoration:none; cursor:pointer; }
+.page-actions :is(button,a):hover { background:#ffd85b; }
+.page-actions :is(button,a):focus-visible { outline:2px solid #fff0b0; outline-offset:2px; }
 </style>
 </head>
 <body>
-<header><h1 id="title"></h1><p id="englishTitle" lang="en" dir="ltr"></p></header>
+<header><h1 id="title"></h1><p id="englishTitle" lang="en" dir="ltr"></p>
+<nav class="page-actions" aria-label="פעולות">
+<a href="../../index.html">תפריט האטלס</a>
+<button type="button" id="restart">↻ התחל מחדש</button>
+</nav></header>
 <main>
 <div id="stage" dir="ltr">
   <div class="items" id="above"></div>
@@ -45,7 +51,7 @@ a { color: #9bdcff; }
   <p id="hebrewInfo"></p>
   <button id="englishInfo" type="button" lang="en" dir="ltr" title="Read aloud"></button>
 </section>
-<footer><a href="../../index.html">חזרה לאינדקס</a><p>היטל לימודי במבט צד. איברים בעומקים שונים מוצגים יחד.</p><a href="https://vetcenter.purina.pt/sites/default/files/vet_materials/dog_anatomy.pdf">מקור לעיון באנטומיה</a></footer>
+
 </main>
 <script src="./buttons.js"></script>
 <script src="./explanations.js"></script>
@@ -125,6 +131,13 @@ for(const [group,top] of [[ordered.slice(0,half),true],[ordered.slice(half),fals
     get(top?"above":"below").append(button);
   }
 }
+get("restart").addEventListener("click",()=>{
+  selected = null;
+  window.speechSynthesis?.cancel();
+  get("detail").hidden = true;
+  for(const {button} of buttons.values())button.setAttribute("aria-pressed","false");
+  drawLines();
+});
 get("englishInfo").addEventListener("click",()=>{if(selected)speak(notes[selected].en);});
 picture.addEventListener("load",drawLines);
 window.addEventListener("resize",drawLines);
