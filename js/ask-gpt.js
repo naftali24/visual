@@ -15,7 +15,16 @@
   function updateLink() {
     const organ = document.querySelector('[aria-pressed="true"] [lang="en"]')?.textContent.trim();
     let prompt;
-    if (link.dataset.category === "technology") {
+    if (link.dataset.category === "football") {
+      prompt = language === "he"
+        ? ["אני לומד על שחקני מכבי חיפה בכדורגל בעונת 2026/27.",
+           organ ? "השחקן שבחרתי: " + organ + "." : "הצג סקירה קצרה על שחקני הקבוצה.",
+           "הסבר בעברית פשוטה על תפקיד השחקן, הקריירה שלו ופועלו במכבי חיפה. הוסף 4–6 עובדות מעניינות ומאומתות עם מקורות אמינים.",
+           "בדוק נתונים עדכניים וציין תאריך. הבחן בין הופעות בליגה להופעות בכל המסגרות ובין משחקים לפתיחות בהרכב. כותרות סגל ראשון וסגל שני בספר הן חלוקה לימודית לפי הופעות, ולא הרכבים רשמיים. אל תמציא נתונים חסרים."].filter(Boolean).join("\n\n")
+        : ["Answer in " + languages[language] + ". I am learning about Maccabi Haifa football players in the 2026/27 season.",
+           organ ? "Selected player: " + organ + "." : "Give a brief overview of the players.",
+           "Explain the player's position, career and Maccabi Haifa contribution. Include 4–6 verified interesting facts and reliable sources. Check current data and state its date. Distinguish league from all-competition appearances, and appearances from starts. Squad 1 and Squad 2 are educational groups ranked by appearances, not official lineups. Do not invent missing information."].filter(Boolean).join("\n\n");
+    } else if (link.dataset.category === "technology") {
       prompt = language === "he"
         ? ["הסבר בעברית פשוטה על המכונית המעופפת של אילון מאסק וטסלה רודסטר: המערכות העיקריות, הנעה חשמלית ודחף בגז דחוס.",
            organ ? "התייחס גם לפריט שבחרתי: " + organ + "." : "",
