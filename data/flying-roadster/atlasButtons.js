@@ -5,60 +5,25 @@ window.atlasPage = {
   },
   "items": [
     {
-      "id": "headlight",
-      "en": "Headlight",
-      "he": "פנס קדמי",
-      "x": 235,
-      "y": 465
+      "id": "pressure-tanks",
+      "en": "High-pressure gas tanks",
+      "he": "מכלי גז בלחץ גבוה",
+      "x": 440,
+      "y": 400
     },
     {
-      "id": "hood",
-      "en": "Hood",
-      "he": "מכסה קדמי",
-      "x": 220,
-      "y": 405
-    },
-    {
-      "id": "windshield",
-      "en": "Windshield",
-      "he": "שמשה קדמית",
-      "x": 410,
-      "y": 320
-    },
-    {
-      "id": "cabin",
-      "en": "Cabin",
-      "he": "תא הנוסע",
-      "x": 600,
-      "y": 325
-    },
-    {
-      "id": "rear-body",
-      "en": "Rear body",
-      "he": "חלק אחורי",
+      "id": "active-wings",
+      "en": "Active wings",
+      "he": "כנפיים פעילות",
       "x": 865,
       "y": 370
     },
     {
-      "id": "front-wheel",
-      "en": "Front wheel",
-      "he": "גלגל קדמי",
-      "x": 377,
-      "y": 548
-    },
-    {
-      "id": "door",
-      "en": "Door",
-      "he": "דלת",
+      "id": "flight-control",
+      "en": "Airborne stabilization",
+      "he": "ייצוב באוויר",
       "x": 600,
-      "y": 485
-    },
-    {
-      "id": "rear-wheel",
-      "en": "Rear wheel",
-      "he": "גלגל אחורי",
-      "x": 868,
-      "y": 550
+      "y": 325
     },
     {
       "id": "air-jet",
@@ -66,6 +31,13 @@ window.atlasPage = {
       "he": "דחף גז דחוס",
       "x": 170,
       "y": 700
+    },
+    {
+      "id": "suction",
+      "en": "Underbody suction",
+      "he": "יניקה מתחת לרכב",
+      "x": 590,
+      "y": 635
     },
     {
       "id": "ground",
