@@ -4,14 +4,27 @@
   "short_name": "ספר ויזואלי",
   "start_url": "./",
   "scope": "./",
-  "display": "standalone",
-  "display_override": ["fullscreen", "standalone"],
+  "display": "fullscreen",
+  "display_override": [
+    "fullscreen",
+    "standalone"
+  ],
   "lang": "he",
   "dir": "rtl",
   "theme_color": "#090703",
   "background_color": "#090703",
   "icons": [
-    {"src": "./images/icons/visual-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
-    {"src": "./images/icons/visual-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"}
+    {
+      "src": "./images/icons/visual-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./images/icons/visual-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
   ]
 }
