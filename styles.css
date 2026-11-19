@@ -28,6 +28,6 @@
   #explanation, #term [lang=en], #translationStatus { color: var(--english); }
   #translationStatus { margin: 8px 0; text-align: center; color: #f1cf70; font-size: 14px; }
 
-.restart { position:fixed; top:max(8px,env(safe-area-inset-top)); right:max(8px,env(safe-area-inset-right)); z-index:20; display:grid; place-items:center; width:52px; height:52px; padding:0; text-decoration:none; border:1px solid #e2b63e; border-radius:9px; background:#f8e8ad; color:#241805; font:700 31px/1 Arial,sans-serif; cursor:pointer; }
+.restart { position:fixed; bottom:env(safe-area-inset-bottom,0px); right:env(safe-area-inset-right,0px); opacity:.5; z-index:20; display:grid; place-items:center; width:52px; height:52px; padding:0; text-decoration:none; border:1px solid #e2b63e; border-radius:9px; background:#f8e8ad; color:#241805; font:700 31px/1 Arial,sans-serif; cursor:pointer; }
 .restart:hover { background:#ffd85b; }
 .restart:focus-visible { outline:2px solid #fff0b0; outline-offset:2px; }
