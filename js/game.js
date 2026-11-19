@@ -35,11 +35,6 @@
     return {x,y,en:item.en,name:language==="he"?item.he:item.en};
   });
   const make = (tag, className) => Object.assign(document.createElement(tag), {className});
-  const svgNode = tag => document.createElementNS("http://www.w3.org/2000/svg",tag);
-  const attributes = (element, values) => {
-    for(const [key,value] of Object.entries(values))element.setAttribute(key,value);
-    return element;
-  };
   const game = make("section","atlas-game");
   game.lang = language;
   game.dir = ["he","ar"].includes(language) ? "rtl" : "ltr";
@@ -55,13 +50,15 @@
   const image = make("img","");
   image.alt = "";
   image.draggable = false;
-  const guides = attributes(svgNode("svg"),{class:"atlas-game-guides","aria-hidden":"true"});
+  const pointer = make("span","atlas-game-cursor");
+  pointer.setAttribute("aria-hidden","true");
+  pointer.hidden = true;
   const revealed = make("div","atlas-game-revealed");
   const replay = make("button","atlas-game-replay");
   replay.type = "button";
   replay.textContent = replayText;
-  figure.append(image,guides,revealed);
-  game.append(heading,status,figure,replay);
+  figure.append(image,pointer);
+  game.append(figure,heading,status,revealed,replay);
   document.body.append(game);
   document.documentElement.classList.add("atlas-playing");
 
@@ -70,7 +67,8 @@
   const tags = new Map();
   function currentQuestion(){
     const item = queue[0];
-    heading.textContent = item ? question+" "+item.name : complete;
+    heading.textContent = item ? item.name : complete;
+    heading.setAttribute("aria-label",item ? question+" "+item.name : complete);
     replay.hidden = Boolean(item);
   }
   function reset(){
@@ -85,30 +83,14 @@
     status.textContent="";
     revealed.replaceChildren();
     currentQuestion();
-    drawRevealed();
+    drawCursor();
   }
 
-  function drawRevealed(){
-    const {width:w,height:h} = image.getBoundingClientRect();
-    if(!w || !h)return;
-    attributes(guides,{viewBox:"0 0 "+w+" "+h});
-    guides.replaceChildren();
-    const taken=[];
-    for(const item of found){
-      const x=item.x*w,y=item.y*h;
-      const tag=tags.get(item), tw=tag.offsetWidth, th=tag.offsetHeight;
-      const offsets=[[-tw/2,-th-7],[8,-th/2],[-tw-8,-th/2],[-tw/2,8],[12,-th-12],[-tw-12,12],[12,12],[-tw-12,-th-12]];
-      for(let r=28;r<=112;r+=14)offsets.push([-tw/2,-th-r],[-tw/2,r],[r,-th/2],[-tw-r,-th/2],[r,r],[-tw-r,-th-r]);
-      const options=offsets.map(([dx,dy])=>({left:Math.max(0,Math.min(w-tw,x+dx)),top:Math.max(0,Math.min(h-th,y+dy))}));
-      const free=options.find(p=>taken.every(q=>p.left>=q.right+2 || p.left+tw+2<=q.left || p.top>=q.bottom+2 || p.top+th+2<=q.top));
-      const {left,top}=free || options[0];
-      taken.push({left,top,right:left+tw,bottom:top+th});
-      tag.style.left=left+"px";
-      tag.style.top=top+"px";
-      const endX=Math.max(left,Math.min(left+tw,x)),endY=Math.max(top,Math.min(top+th,y));
-      guides.append(attributes(svgNode("line"),{x1:x,y1:y,x2:endX,y2:endY}),attributes(svgNode("circle"),{cx:x,cy:y,r:3}));
-    }
-    if(cursor)guides.append(attributes(svgNode("circle"),{class:"cursor",cx:cursor.x*w,cy:cursor.y*h,r:7}));
+  function drawCursor(){
+    pointer.hidden = !cursor;
+    if(!cursor)return;
+    pointer.style.left = cursor.x*100+"%";
+    pointer.style.top = cursor.y*100+"%";
   }
   function attempt(x,y){
     const item=queue[0];
@@ -122,18 +104,27 @@
       status.textContent=again;
       return;
     }
-    const tag=make("span","atlas-game-tag");
+    const tag=make("button","atlas-game-tag");
+    tag.type="button";
     tag.textContent=item.name;
+    tag.addEventListener("click",()=>{
+      if(!window.speechSynthesis || typeof SpeechSynthesisUtterance!=="function")return;
+      const speech=new SpeechSynthesisUtterance(item.en);
+      speech.lang="en-US";
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(speech);
+    });
     tags.set(item,tag);
     revealed.append(tag);
     found.push(queue.shift());
     status.textContent=correct+" "+found.length+"/"+items.length;
     currentQuestion();
-    drawRevealed();
+    drawCursor();
   }
   image.addEventListener("click",event=>{
     const b=image.getBoundingClientRect();
     cursor=null;
+    drawCursor();
     attempt((event.clientX-b.left)/b.width,(event.clientY-b.top)/b.height);
   });
   figure.addEventListener("keydown",event=>{
@@ -143,15 +134,12 @@
       if(!cursor)cursor={x:.5,y:.5};
       cursor.x=Math.max(0,Math.min(1,cursor.x+movement[0]));
       cursor.y=Math.max(0,Math.min(1,cursor.y+movement[1]));
-      drawRevealed();
+      drawCursor();
     }else if(cursor && (event.key==="Enter" || event.key===" ")){
       event.preventDefault();
       attempt(cursor.x,cursor.y);
     }
   });
-  image.addEventListener("load",drawRevealed);
-  window.addEventListener("resize",drawRevealed);
-  if(typeof ResizeObserver==="function")new ResizeObserver(drawRevealed).observe(image);
   replay.addEventListener("click",reset);
   reset();
   image.src=photo.getAttribute("href") || photo.getAttribute("src");
@@ -170,6 +158,5 @@
         if(tags.has(item))tags.get(item).textContent=item.name;
       });
       currentQuestion();
-      drawRevealed();
     }).catch(()=>{}).finally(()=>clearTimeout(timeout));
 })();
