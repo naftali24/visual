@@ -5,7 +5,7 @@ h1 { margin: 6px 0; color: #ffda68; font-size: clamp(23px, 4.5vw, 40px); }
 header p { color: #9bdcff; margin: 5px 0; font-size: clamp(17px, 3.2vw, 22px); }
 main { max-width: 1050px; margin: auto; padding: 10px; }
 #stage { position: relative; container-type: inline-size; padding: 3px 0; border: 1px solid #8b650e; border-radius: 15px; background: #030302; }
-#picture { display: block; width: 88.75%; height: auto; height: calc(60.9cqw + 71.707px); margin: 0 auto; object-fit: fill; background: #bfbfbf; }
+#picture { display: block; width: 88.75%; height: auto; height: calc(60.9cqw + 71.707px); margin: 0 auto; object-fit: fill; background: linear-gradient(#ffe788,#d99a16); }
 @media (max-width: 620px) {
   #picture { width: 96.8182%; height: calc(66.4364cqw + 71.707px); }
 }
