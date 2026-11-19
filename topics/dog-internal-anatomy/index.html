@@ -37,7 +37,6 @@ h2 { color: #ffd85b; margin: 0 0 8px; font-size: 22px; }
 <header><h1 id="title"></h1><p id="englishTitle" lang="en" dir="ltr"></p>
 <nav class="page-actions" aria-label="פעולות">
 <a href="../../index.html">תפריט האטלס</a>
-<button type="button" id="restart">↻ התחל מחדש</button>
 </nav></header>
 <main>
 <div id="stage" dir="ltr">
@@ -131,13 +130,6 @@ for(const [group,top] of [[ordered.slice(0,half),true],[ordered.slice(half),fals
     get(top?"above":"below").append(button);
   }
 }
-get("restart").addEventListener("click",()=>{
-  selected = null;
-  window.speechSynthesis?.cancel();
-  get("detail").hidden = true;
-  for(const {button} of buttons.values())button.setAttribute("aria-pressed","false");
-  drawLines();
-});
 get("englishInfo").addEventListener("click",()=>{if(selected)speak(notes[selected].en);});
 picture.addEventListener("load",drawLines);
 window.addEventListener("resize",drawLines);

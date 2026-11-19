@@ -6,14 +6,18 @@
 <title>Horse Atonomy</title>
 <link rel="stylesheet" href="./styles.css">
 <style>
-.atlas-menu { display:flex; justify-content:center; align-items:center; gap:8px; flex-wrap:wrap; margin:10px auto 0; padding:0 10px; text-align:center; }
-.atlas-menu nav { margin:0 !important; padding:0 !important; }
-.atlas-menu summary { display:none; }
-.atlas-menu ul { list-style:none; display:flex; justify-content:center; gap:8px; flex-wrap:wrap; margin:0; padding:0; }
-.atlas-menu a { display:inline-flex; align-items:center; justify-content:center; min-width:112px; min-height:44px; padding:6px 16px; border:1px solid #e2b63e; border-radius:10px; background:#f8e8ad; color:#241805 !important; font:800 18px Arial,sans-serif; text-decoration:none; }
-.atlas-menu a[aria-current] { background:#d8a72c; }
-.atlas-menu a:hover { background:#ffd85b; }
-.atlas-menu a:focus-visible { outline:2px solid #fff0b0; outline-offset:2px; }
+ .atlas-controls { display:flex; justify-content:center; flex-wrap:wrap; gap:8px; margin:10px auto 0; padding:0 10px; }
+.atlas-controls :is(summary,button), .atlas-menu-panel a { display:inline-flex; align-items:center; justify-content:center; min-height:44px; padding:6px 17px; border:1px solid #e2b63e; border-radius:10px; background:#f8e8ad; color:#241805 !important; font:800 17px Arial,sans-serif; text-decoration:none; cursor:pointer; }
+.atlas-controls :is(summary,button):hover, .atlas-menu-panel a:hover { background:#ffd85b; }
+.atlas-controls :is(summary,button,a):focus-visible { outline:2px solid #fff0b0; outline-offset:2px; }
+#atlas-menu { position:relative; z-index:10; }
+#atlas-menu > summary { list-style:none; }
+#atlas-menu > summary::-webkit-details-marker { display:none; }
+.atlas-menu-panel { position:absolute; top:calc(100% + 6px); right:0; width:min(220px,85vw); display:grid; gap:6px; padding:8px; background:#1d1508; border:1px solid #9c7422; border-radius:12px; box-shadow:0 6px 18px #0008; }
+.atlas-menu-panel nav { margin:0 !important; padding:0 !important; }
+.atlas-menu-panel nav summary { display:none; }
+.atlas-menu-panel ul { list-style:none; display:grid; gap:6px; margin:0; padding:0; }
+.atlas-menu-panel a { width:100%; }
 </style>
 </head>
 <body>
@@ -33,7 +37,10 @@
   <option value="it">Italiano</option><option value="pt">Português</option><option value="en">English</option>
 </select></span>
 </div></header>
-<div class="atlas-menu" dir="rtl" role="group" aria-label="תפריט האטלס">
+<div class="atlas-controls" dir="rtl">
+<details id="atlas-menu">
+<summary>☰ תפריט</summary>
+<div class="atlas-menu-panel">
 <a href="#horse-atlas" aria-current="page">סוס</a>
 <!-- visual-topics:start -->
 <nav dir="rtl" aria-label="נושאים נוספים" style="max-width:1050px;margin:14px auto;padding:0 12px">
@@ -42,6 +49,8 @@
 <li><a href="./topics/dog-internal-anatomy/index.html" style="color:#9bdcff" aria-label="אנטומיה פנימית של הכלב">כלב</a></li>
 </ul></details></nav>
 <!-- visual-topics:end -->
+</div></details>
+<button type="button" id="restart">↻ התחל מחדש</button>
 </div>
 <main id="horse-atlas"><div class="stage">
 <svg id="horse" viewBox="0 0 800 465" aria-labelledby="figureTitle">

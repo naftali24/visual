@@ -174,6 +174,29 @@ function drawLabels(){
 $("explanation").addEventListener("click",()=>{
   if(selected!==null)speak(parts[selected].enInfo);
 });
+const atlasMenu=$("atlas-menu");
+atlasMenu.querySelector("a[href='#horse-atlas']").addEventListener("click",()=>{
+  atlasMenu.open=false;
+});
+atlasMenu.addEventListener("keydown",event=>{
+  if(event.key==="Escape" && atlasMenu.open){
+    atlasMenu.open=false;
+    atlasMenu.querySelector("summary").focus();
+  }
+});
+$("restart").addEventListener("click",()=>{
+  selected=null;
+  window.speechSynthesis?.cancel();
+  $("detail").hidden=true;
+  atlasMenu.open=false;
+  if(language!=="he"){
+    $("language").value="he";
+    loadLanguage("he");
+  }else{
+    highlight();
+  }
+  window.scrollTo(0,0);
+});
 $("language").addEventListener("change",event=>loadLanguage(event.target.value));
 loadLanguage($("language").value || "he");
 if(phone.addEventListener)phone.addEventListener("change",drawLabels);
