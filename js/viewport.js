@@ -25,7 +25,8 @@
         close.addEventListener('click', () => { detail.hidden = true; });
         detail.append(close);
       }
-      const needsOverlay = main.offsetHeight > height - inset * 2;
+      const needsOverlay = document.body.dataset.detailPlacement !== 'below' &&
+        main.offsetHeight > height - inset * 2;
       const active = document.querySelector('.items button[aria-pressed="true"], #labels .label.active');
       if (active && needsOverlay) {
         const top = active.closest('#above') || (active.dataset.index !== undefined && Number(active.dataset.index) < 6);
