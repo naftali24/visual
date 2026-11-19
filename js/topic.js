@@ -140,5 +140,6 @@ loadTranslations();
 get("englishInfo").addEventListener("click",()=>{if(selected)speak(notes[selected].en);});
 picture.addEventListener("load",drawLines);
 window.addEventListener("resize",drawLines);
+window.addEventListener("atlas-layout",drawLines);
 if(typeof ResizeObserver==="function")new ResizeObserver(drawLines).observe(stage);
 drawLines();

@@ -35,4 +35,4 @@ body[data-layout="map"] #picture { width:100%; height:auto; aspect-ratio:3/2; ob
   body[data-layout="map"] #above { grid-template-columns:repeat(4,minmax(0,1fr)); }
   body[data-layout="map"] #below { grid-template-columns:repeat(5,minmax(0,1fr)); }
 }
-body[data-layout="map"] .items button { font-size:clamp(13px,1.9vw,20px); }
+body[data-layout="map"] .items button { font-size:clamp(18px,2.7vw,30px); }
