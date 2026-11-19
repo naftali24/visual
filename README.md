@@ -19,3 +19,10 @@
 שמור את תמונת הנושא ב־images, את נתוני הכפתורים וההסברים ב־data תחת שם הנושא, ואת העמוד בתיקייה topics/<topic>/index.html. אם לנושא יש קוד או עיצוב משלו, שמור אותם ב־js וב־css. השתמש בנתיבים יחסיים מתוך העמוד כדי שייטען גם תחת כתובת GitHub Pages של המאגר.
 
 הוסף קישור לעמוד בתוך מקטע visual-topics באינדקס. שמור על כתובת העמוד לאחר הפרסום כדי שקיצורי דרך קיימים ימשיכו לעבוד.
+
+## מקורות לאיור הכריש הגרינלנדי
+
+- [דף זיהוי המין Somniosus microcephalus](https://www.nafo.int/Portals/0/PDFs/fc/proc/USA_GreenlandSharkIDCharacteristicSheet.pdf)
+- [אנטומיה כללית של כרישים, Fisheries and Oceans Canada](https://www.dfo-mpo.gc.ca/species-especes/sharks/anatomy-eng.html)
+
+מיקום האיברים באיור הכריש סכמטי. האיור משלב מאפיינים חיצוניים של הכריש הגרינלנדי עם אנטומיה פנימית כללית של כרישים.

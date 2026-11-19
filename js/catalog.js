@@ -14,6 +14,12 @@ const labels={
   it:["Il libro visivo di Naftali","Argomenti","Anatomia interna del cavallo","Anatomia interna del cane","Lingua dell’atlante"],
   pt:["O livro visual de Naftali","Temas","Anatomia interna do cavalo","Anatomia interna do cão","Idioma do atlas"]
 };
+const sharkTitles={
+  en:"Greenland Shark – Anatomy",he:"כריש גרינלנדי-אנטומיה",ar:"تشريح قرش غرينلاند",
+  es:"Anatomía del tiburón de Groenlandia",fr:"Anatomie du requin du Groenland",
+  de:"Anatomie des Grönlandhais",ru:"Анатомия гренландской акулы",
+  it:"Anatomia dello squalo della Groenlandia",pt:"Anatomia do tubarão-da-Groenlândia"
+};
 let topicTranslationRequest;
 
 function translateCatalog(){
@@ -28,12 +34,12 @@ function translateCatalog(){
   selector.setAttribute("aria-label",languageLabel);
   selector.title=languageLabel;
   selector.parentElement.title=languageLabel;
-  for(const [slug,name] of [["horse",horse],["dog-internal-anatomy",dog]]){
+  for(const [slug,name] of [["horse",horse],["dog-internal-anatomy",dog],["greenland-shark",sharkTitles[lang] || sharkTitles.he]]){
     const link=topics.get(slug);
     if(link)link.textContent=name;
   }
   topicTranslationRequest?.abort();
-  const extra=[...topics.entries()].filter(([slug])=>slug!=="horse" && slug!=="dog-internal-anatomy");
+  const extra=[...topics.entries()].filter(([slug])=>slug!=="horse" && slug!=="dog-internal-anatomy" && slug!=="greenland-shark");
   for(const [,link] of extra)link.textContent=lang==="he"?link.dataset.original:link.dataset.english;
   if(!extra.length || lang==="en" || lang==="he")return;
   const request=new AbortController();
