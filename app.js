@@ -174,22 +174,26 @@ function drawLabels(){
 $("explanation").addEventListener("click",()=>{
   if(selected!==null)speak(parts[selected].enInfo);
 });
-$("restart").addEventListener("click",()=>{
-  selected=null;
-  window.speechSynthesis?.cancel();
-  $("detail").hidden=true;
-  highlight();
-  window.scrollTo(0,0);
-});
 const supportedLanguages=["en","he","ar","es","fr","de","ru","it","pt"];
 let preference=new URLSearchParams(location.search).get("lang");
 if(!preference){
   try { preference=localStorage.getItem("visualLanguage"); } catch {}
 }
 const initialLanguage=supportedLanguages.includes(preference)?preference:"en";
-const resetLabels={en:"Restart",he:"התחל מחדש",ar:"إعادة البدء",es:"Reiniciar",fr:"Recommencer",de:"Neu starten",ru:"Начать заново",it:"Ricomincia",pt:"Reiniciar"};
-$("restart").setAttribute("aria-label",resetLabels[initialLanguage]);
-$("restart").title=resetLabels[initialLanguage];
+const homeLabels={en:"Back to topics",he:"חזרה לתפריט הראשי",ar:"العودة إلى الموضوعات",es:"Volver a los temas",fr:"Retour aux sujets",de:"Zurück zur Themenliste",ru:"Вернуться к темам",it:"Torna agli argomenti",pt:"Voltar aos temas"};
+const homeLink=$("restart");
+homeLink.setAttribute("aria-label",homeLabels[initialLanguage]);
+homeLink.title=homeLabels[initialLanguage];
+const homeUrl=new URL(homeLink.href);
+homeUrl.searchParams.set("lang",initialLanguage);
+homeLink.href=homeUrl.href;
+homeLink.addEventListener("click",event=>{
+  window.speechSynthesis?.cancel();
+  if(window.parent!==window && location.protocol!=="file:"){
+    event.preventDefault();
+    window.parent.postMessage("visual-atlas-home",location.origin);
+  }
+});
 loadLanguage(initialLanguage);
 if(phone.addEventListener)phone.addEventListener("change",drawLabels);
 else phone.addListener(drawLabels);

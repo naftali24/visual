@@ -27,14 +27,13 @@ h2 { color: #ffd85b; margin: 0 0 8px; font-size: 22px; }
 #detail p { margin: 0 0 7px; font-size: 19px; }
 #englishInfo { cursor: pointer; border: 0; background: transparent; color: #9bdcff; font: inherit; font-size: 19px; }
 [hidden] { display: none !important; }
-.restart { position:fixed; top:max(8px,env(safe-area-inset-top)); right:max(8px,env(safe-area-inset-right)); z-index:20; width:64px; height:64px; padding:0; border:1px solid #e2b63e; border-radius:9px; background:#f8e8ad; color:#241805; font:700 38px/1 Arial,sans-serif; cursor:pointer; }
+.restart { position:fixed; top:max(8px,env(safe-area-inset-top)); right:max(8px,env(safe-area-inset-right)); z-index:20; display:grid; place-items:center; width:52px; height:52px; padding:0; text-decoration:none; border:1px solid #e2b63e; border-radius:9px; background:#f8e8ad; color:#241805; font:700 31px/1 Arial,sans-serif; cursor:pointer; }
 .restart:hover { background:#ffd85b; }
 .restart:focus-visible { outline:2px solid #fff0b0; outline-offset:2px; }
-body:has(> .restart) main { padding-top:82px; }
 </style>
 </head>
 <body>
-<button type="button" class="restart" id="restart" aria-label="Restart" title="Restart">↻</button>
+<a class="restart" id="restart" href="../../index.html" target="_top" aria-label="Back to topics" title="Back to topics">↻</a>
 <main>
 <div id="stage" dir="ltr">
   <div class="items" id="above"></div>
@@ -66,9 +65,20 @@ if(!requestedLanguage){
   try { requestedLanguage=localStorage.getItem("visualLanguage"); } catch {}
 }
 const language=supportedLanguages.includes(requestedLanguage)?requestedLanguage:"en";
-const resetLabels={en:"Restart",he:"התחל מחדש",ar:"إعادة البدء",es:"Reiniciar",fr:"Recommencer",de:"Neu starten",ru:"Начать заново",it:"Ricomincia",pt:"Reiniciar"};
-get("restart").setAttribute("aria-label",resetLabels[language]);
-get("restart").title=resetLabels[language];
+const homeLabels={en:"Back to topics",he:"חזרה לתפריט הראשי",ar:"العودة إلى الموضوعات",es:"Volver a los temas",fr:"Retour aux sujets",de:"Zurück zur Themenliste",ru:"Вернуться к темам",it:"Torna agli argomenti",pt:"Voltar aos temas"};
+const homeLink=get("restart");
+homeLink.setAttribute("aria-label",homeLabels[language]);
+homeLink.title=homeLabels[language];
+const homeUrl=new URL(homeLink.href);
+homeUrl.searchParams.set("lang",language);
+homeLink.href=homeUrl.href;
+homeLink.addEventListener("click",event=>{
+  window.speechSynthesis?.cancel();
+  if(window.parent!==window && location.protocol!=="file:"){
+    event.preventDefault();
+    window.parent.postMessage("visual-atlas-home",location.origin);
+  }
+});
 let translations=language==="he"?Object.fromEntries(page.items.map(item=>[item.id,{
   name:item.he,info:notes[item.id].he
 }])):{};
@@ -176,14 +186,6 @@ for(const [group,top] of [[ordered.slice(0,half),true],[ordered.slice(half),fals
     get(top?"above":"below").append(button);
   }
 }
-get("restart").addEventListener("click",()=>{
-  selected=null;
-  window.speechSynthesis?.cancel();
-  get("detail").hidden=true;
-  for(const {button} of buttons.values())button.setAttribute("aria-pressed","false");
-  drawLines();
-  window.scrollTo(0,0);
-});
 loadTranslations();
 get("englishInfo").addEventListener("click",()=>{if(selected)speak(notes[selected].en);});
 picture.addEventListener("load",drawLines);

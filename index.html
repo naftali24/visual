@@ -9,10 +9,10 @@
 body{margin:0;background:#090703;color:#fff;font:16px Arial,sans-serif}
 [hidden]{display:none!important}
 header{background:#120d05;border-bottom:1px solid #a87914;padding:14px 10px}
-.bar{display:flex;align-items:center;justify-content:center;gap:12px}
+.bar{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap}
 h1{margin:0;color:#ffda68;text-shadow:0 0 12px #f8b62d80;font-size:clamp(30px,6vw,46px)}
-.language{position:relative;width:46px;height:46px;display:inline-flex;align-items:center;justify-content:center;color:#fff0ad;background:#765006;border:1px solid #c69426;border-radius:9px;box-shadow:0 0 8px #f8b62d80;font-size:25px}
-.language select{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
+.language{display:inline-flex;align-items:center;gap:6px;color:#fff0ad;background:#765006;border:1px solid #c69426;border-radius:9px;padding-inline-start:9px;font-size:20px}
+.language select{min-height:44px;padding:4px 7px;border:0;border-radius:8px;background:#f8e8ad;color:#241805;font:700 16px Arial,sans-serif;cursor:pointer}
 .language:focus-within,:focus-visible{outline:2px solid #ffda68;outline-offset:4px}
 main{max-width:1050px;margin:auto;padding:20px 12px}
 h2{color:#ffda68;text-align:center;margin:0 0 14px;font-size:24px}
@@ -41,10 +41,10 @@ h2{color:#ffda68;text-align:center;margin:0 0 14px;font-size:24px}
 <main>
 <h2 id="topic-heading">Topics</h2>
 <div class="topic-links" id="topic-links">
-<a href="./topics/horse/index.html" data-topic="horse">Horse</a>
+<a href="./topics/horse/index.html" data-topic="horse">Horse Internal Anatomy</a>
 <!-- visual-topics:start -->
 <nav aria-label="More topics">
-<ul><li><a href="./topics/dog-internal-anatomy/index.html" data-topic="dog-internal-anatomy">Dog</a></li></ul>
+<ul><li><a href="./topics/dog-internal-anatomy/index.html" data-topic="dog-internal-anatomy">Dog Internal Anatomy</a></li></ul>
 </nav>
 <!-- visual-topics:end -->
 </div>
@@ -58,15 +58,15 @@ const selector=document.getElementById("language");
 const topics=new Map();
 let lastLink;
 const labels={
-  en:["Visual Atlas","Topics","Horse","Dog","Atlas language"],
-  he:["אטלס חזותי","נושאים","סוס","כלב","שפת האטלס"],
-  ar:["الأطلس المرئي","الموضوعات","الحصان","الكلب","لغة الأطلس"],
-  es:["Atlas visual","Temas","Caballo","Perro","Idioma del atlas"],
-  fr:["Atlas visuel","Sujets","Cheval","Chien","Langue de l’atlas"],
-  de:["Visueller Atlas","Themen","Pferd","Hund","Sprache des Atlas"],
-  ru:["Визуальный атлас","Темы","Лошадь","Собака","Язык атласа"],
-  it:["Atlante visivo","Argomenti","Cavallo","Cane","Lingua dell’atlante"],
-  pt:["Atlas visual","Temas","Cavalo","Cão","Idioma do atlas"]
+  en:["Visual Atlas","Topics","Horse Internal Anatomy","Dog Internal Anatomy","Atlas language"],
+  he:["אטלס חזותי","נושאים","אנטומיה פנימית של הסוס","אנטומיה פנימית של הכלב","שפת האטלס"],
+  ar:["الأطلس المرئي","الموضوعات","التشريح الداخلي للحصان","التشريح الداخلي للكلب","لغة الأطلس"],
+  es:["Atlas visual","Temas","Anatomía interna del caballo","Anatomía interna del perro","Idioma del atlas"],
+  fr:["Atlas visuel","Sujets","Anatomie interne du cheval","Anatomie interne du chien","Langue de l’atlas"],
+  de:["Visueller Atlas","Themen","Innere Anatomie des Pferdes","Innere Anatomie des Hundes","Sprache des Atlas"],
+  ru:["Визуальный атлас","Темы","Внутренняя анатомия лошади","Внутренняя анатомия собаки","Язык атласа"],
+  it:["Atlante visivo","Argomenti","Anatomia interna del cavallo","Anatomia interna del cane","Lingua dell’atlante"],
+  pt:["Atlas visual","Temas","Anatomia interna do cavalo","Anatomia interna do cão","Idioma do atlas"]
 };
 let topicTranslationRequest;
 
@@ -81,8 +81,10 @@ function translateCatalog(){
   selector.setAttribute("aria-label",languageLabel);
   selector.title=languageLabel;
   selector.parentElement.title=languageLabel;
-  topics.get("horse").textContent=horse;
-  topics.get("dog-internal-anatomy")?.replaceChildren(dog);
+  for(const [slug,name] of [["horse",horse],["dog-internal-anatomy",dog]]){
+    const link=topics.get(slug);
+    if(link)link.textContent=name;
+  }
   topicTranslationRequest?.abort();
   const extra=[...topics.entries()].filter(([slug])=>slug!=="horse" && slug!=="dog-internal-anatomy");
   for(const [,link] of extra)link.textContent=lang==="he"?link.dataset.original:link.dataset.english;
@@ -100,12 +102,20 @@ function translateCatalog(){
       }
     }).catch(()=>{}).finally(()=>clearTimeout(timeout));
 }
-try { selector.value=localStorage.getItem("visualLanguage") || "en"; } catch {}
-if(!selector.value)selector.value="en";
-selector.addEventListener("change",()=>{
+let languagePreference=new URLSearchParams(location.search).get("lang");
+if(!languagePreference){
+  try { languagePreference=localStorage.getItem("visualLanguage"); } catch {}
+}
+selector.value=Object.hasOwn(labels,languagePreference)?languagePreference:"en";
+function changeLanguage(){
   try { localStorage.setItem("visualLanguage",selector.value); } catch {}
+  const address=new URL(location.href);
+  address.searchParams.set("lang",selector.value);
+  history.replaceState(null,"",address);
   translateCatalog();
-});
+}
+selector.addEventListener("input",changeLanguage);
+selector.addEventListener("change",changeLanguage);
 for(const link of document.querySelectorAll("#topic-links a")){
   const slug=link.getAttribute("href").match(/^\.\/topics\/([a-z0-9-]+)\/(?:index\.html)?$/)?.[1];
   if(!slug)continue;
@@ -149,6 +159,12 @@ function renderTopic(){
   window.scrollTo(0,0);
 }
 window.addEventListener("popstate",renderTopic);
+window.addEventListener("message",event=>{
+  if(viewer.hidden || event.source!==viewer.contentWindow || event.origin!==location.origin ||
+     event.data!=="visual-atlas-home")return;
+  history.replaceState(null,"",location.pathname+location.search);
+  renderTopic();
+});
 translateCatalog();
 renderTopic();
 </script>
