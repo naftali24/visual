@@ -9,6 +9,6 @@
 
 .atlas-answer-dot { position:fixed; z-index:25; width:10px; height:10px;
   transform:translate(-50%,-50%); border:0; border-radius:50%;
-  background:#ed2024; box-shadow:0 0 3px #000; padding:0; cursor:pointer; }
+  background:#ed2024; opacity:.5; box-shadow:0 0 3px #000; padding:0; cursor:pointer; }
 .atlas-answer-dot::before { content:""; position:absolute; inset:-5px; border-radius:50%; }
 .atlas-answer-dot:focus-visible { outline:3px solid #ffda68; outline-offset:3px; }
