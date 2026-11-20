@@ -38,3 +38,9 @@ body[data-layout="map"] .map-credit { display:block; text-align:center; font:9px
 body[data-layout="map"] .items button { font-size:clamp(18px,2.7vw,30px); }
 
 .items button span.translated[lang="he"] { font-size:.95em; }
+
+/* Horse-and-dog gold label styling for all topics after the Wright Flyer. */
+.atlas-classic-buttons .items { grid-template-columns:repeat(auto-fit,minmax(min(100%,125px),1fr)); gap:6px; padding:4px 6px; }
+.atlas-classic-buttons .items button { appearance:none; min-width:0; min-height:46px; border:1px solid #b78b2b; border-radius:6px; background:linear-gradient(#ffe788,#d99a16); color:#241300; font:750 clamp(17px,1.85vw,20px)/1.12 Arial,sans-serif; padding:5px 7px; overflow-wrap:anywhere; cursor:pointer; }
+.atlas-classic-buttons .items button span.translated { font-size:.85em; color:#493000; }
+@media(max-width:620px){.atlas-classic-buttons .items { grid-template-columns:repeat(auto-fit,minmax(min(100%,100px),1fr)); gap:4px; }.atlas-classic-buttons .items button { font-size:clamp(15px,3.5vw,19px); min-height:44px; padding:4px 3px; }}
