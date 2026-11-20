@@ -13,7 +13,7 @@
   if (language === "he") link.setAttribute("aria-label", "שאל את ChatGPT");
 
   function updateLink() {
-    const organ = document.querySelector('[aria-pressed="true"] [lang="en"]')?.textContent.trim();
+    const organ = link.dataset.category === "family" ? document.querySelector('[data-person-name][aria-pressed="true"]')?.getAttribute("data-person-name") : document.querySelector('[aria-pressed="true"] [lang="en"]')?.textContent.trim();
     let prompt;
     if (link.dataset.category === "history") {
       prompt = language === "he"
