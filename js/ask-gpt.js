@@ -25,6 +25,23 @@
            "Explain " + link.dataset.topicEn + ", the role of Israel’s president and the historical context.",
            organ ? "Selected president, whose button is highlighted: " + organ + ". Also focus on this person's biography, term of office, public work and key events during the presidency." : "",
            "Include 4–6 verified interesting or surprising facts. Check reliable current sources, link to them, state the date and distinguish facts from interpretation. Do not invent missing details."].filter(Boolean).join("\n\n");
+    } else if (link.dataset.category === "family") {
+      prompt = language === "he"
+        ? ["אני לומד מתוך ספר ויזואלי של נפתלי על משפחת דוידוביץ.",
+           organ ? "בחרתי בבן או בת המשפחה: " + organ + ". הסבר את הקשר המשפחתי רק אם המידע ידוע ומאומת." : "הסבר את הקשרים המשפחתיים על סמך המידע שסופק בלבד.",
+           "הצג רק מידע משפחתי שכבר סופק ואומת. אל תמציא שמות, קרבה, מקצוע, גיל או ביוגרפיה. כשאין מספיק מידע, ציין מה חסר ושאל שאלה ממוקדת אחת.",
+           "אין להתייחס לנושא כאל אנטומיה או בעל חיים. כבד פרטיות של בני משפחה."] .join("\n\n")
+        : ["Answer in " + languages[language] + ". This topic is the Davidovitz family, not animal anatomy.",
+           organ ? "Selected family member: " + organ + "." : "Explain known family relationships.",
+           "Use only verified family information provided by the user. Never invent relationships, ages or biographies. Respect privacy and identify missing information."] .join("\n\n");
+    } else if (link.dataset.category === "comparative-anatomy") {
+      prompt = language === "he"
+        ? ["אני לומד אנטומיה של גורילה מתוך ספר ויזואלי של נפתלי.",
+           organ ? "האיבר שנבחר: " + organ + ". הסבר את תפקידו והשווה במפורש את המבנה והתפקוד לאדם." : "הסבר את מערכות הגוף של הגורילה והשווה אותן למערכות המקבילות באדם.",
+           "הצג דמיון והבדלים מבוססים בשלד, בשרירים, בתנועה, במוח, בידיים ובמערכת העיכול. הבחן בין עובדות מבוססות להערכות. הוסף 4–6 עובדות מעניינות עם מקורות אמינים."] .join("\n\n")
+        : ["Answer in " + languages[language] + ". Explain gorilla anatomy compared with human anatomy.",
+           organ ? "Selected organ or structure: " + organ + ". Explain its function and compare it specifically with humans." : "Compare the gorilla's main body systems with humans.",
+           "Distinguish established findings from estimates. Include 4–6 verified interesting facts and reliable sources."] .join("\n\n");
     } else if (link.dataset.category === "football") {
       prompt = language === "he"
         ? ["אני לומד על שחקני מכבי חיפה בכדורגל בעונת 2026/27.",
