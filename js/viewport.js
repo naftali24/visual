@@ -2,6 +2,26 @@
 // visible viewport. Transform preserves the artwork and all target positions.
 (() => {
   const main = document.querySelector('main');
+  // Game control is shared by every topic page, centered between Home and GPT.
+  const gameButton = document.createElement('button');
+  gameButton.type = 'button';
+  gameButton.className = 'atlas-bottom-game';
+  const isGame = new URLSearchParams(location.search).get('game') === '1';
+  gameButton.textContent = '🎮';
+  gameButton.title = isGame ? 'חזרה ללימוד / Back to learning' : 'משחק / Game';
+  gameButton.setAttribute('aria-label', gameButton.title);
+  gameButton.setAttribute('aria-pressed', String(isGame));
+  gameButton.addEventListener('click', () => {
+    const target = new URL(location.href);
+    if (isGame) target.searchParams.delete('game');
+    else target.searchParams.set('game', '1');
+    location.assign(target.href);
+  });
+  document.body.append(gameButton);
+  const gameStyle = document.createElement('style');
+  gameStyle.textContent = '.atlas-bottom-game{position:fixed;bottom:max(0px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);z-index:40;width:52px;height:52px;border:1px solid #e2b63e;border-radius:9px;background:#f8e8ad;color:#241805;font:700 27px/1 Arial,sans-serif;display:grid;place-items:center;cursor:pointer;opacity:1}.atlas-bottom-game[aria-pressed="true"]{background:#ffd85b;box-shadow:0 0 0 2px #c68c18}.atlas-bottom-game:focus-visible{outline:2px solid white;outline-offset:2px}';
+  document.head.append(gameStyle);
+
   let pending = false;
   function explanationLayout(totalHeight, detailTop, availableHeight, widthScale) {
     if ((totalHeight - availableHeight) * widthScale <= 30) return 'flow';
