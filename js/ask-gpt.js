@@ -51,6 +51,14 @@
         : ["Answer in " + languages[language] + ". I am learning about Maccabi Haifa football players in the 2026/27 season.",
            organ ? "Selected player: " + organ + "." : "Give a brief overview of the players.",
            "Explain the player's position, career and Maccabi Haifa contribution. Include 4–6 verified interesting facts and reliable sources. Check current data and state its date. Distinguish league from all-competition appearances, and appearances from starts. Squad 1 and Squad 2 are educational groups ranked by appearances, not official lineups. Do not invent missing information."].filter(Boolean).join("\n\n");
+    } else if (link.dataset.category === "aviation") {
+      prompt = language === "he"
+        ? ["אני לומד על מטוס רייט פלייר משנת 1903, המטוס הממונע של האחים רייט.",
+           organ ? "החלק שבחרתי: " + organ + ". הסבר את תפקידו וכיצד פעל במטוס." : "הסבר את מבנה המטוס ואת עקרונות העילוי, הדחף והשליטה.",
+           "הסבר את הטיסה הראשונה ב־17 בדצמבר 1903, את שלושת צירי השליטה ואת ההבדלים ממטוס מודרני. הבא 4–6 עובדות היסטוריות מאומתות וקישורים למקורות אמינים. אל תתייחס לאנטומיה או לבעלי חיים."].join("\n\n")
+        : ["Answer in " + languages[language] + ". Explain the Wright brothers' 1903 Flyer.",
+           organ ? "Selected component: " + organ + ". Explain its function." : "Explain lift, propulsion and flight controls.",
+           "Cover the first flight on December 17, 1903, three-axis control, and differences from modern aircraft. Include 4–6 verified historical facts and sources. Do not discuss animal anatomy."].join("\n\n");
     } else if (link.dataset.category === "technology") {
       prompt = language === "he"
         ? ["הסבר בעברית פשוטה על המכונית המעופפת של אילון מאסק וטסלה רודסטר: המערכות העיקריות, הנעה חשמלית ודחף בגז דחוס.",
