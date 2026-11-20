@@ -51,6 +51,14 @@
         : ["Answer in " + languages[language] + ". I am learning about Maccabi Haifa football players in the 2026/27 season.",
            organ ? "Selected player: " + organ + "." : "Give a brief overview of the players.",
            "Explain the player's position, career and Maccabi Haifa contribution. Include 4–6 verified interesting facts and reliable sources. Check current data and state its date. Distinguish league from all-competition appearances, and appearances from starts. Squad 1 and Squad 2 are educational groups ranked by appearances, not official lineups. Do not invent missing information."].filter(Boolean).join("\n\n");
+    } else if (link.dataset.category === "submarine") {
+      prompt = language === "he"
+        ? ["אני לומד מתוך הספר הוויזואלי של נפתלי על מבנה צוללת גרעינית.",
+           organ ? "המערכת שבחרתי: " + organ + ". הסבר את תפקידה וכיצד היא משתלבת במערכות הצוללת." : "הסבר כיצד מערכות ההנעה, הכור, הציפה, הניווט ותמיכת החיים פועלות יחד.",
+           "הסבר בשפה פשוטה מה מאפשר לצוללת גרעינית לשהות זמן רב מתחת למים, ומה ההבדל בין הנעה גרעינית לנשק גרעיני. הוסף 4–6 עובדות מעניינות ומאומתות עם קישורים למקורות אמינים. אין להתייחס לאנטומיה של בעלי חיים."].join("\n\n")
+        : ["Answer in " + languages[language] + ". Explain a nuclear-powered submarine.",
+           organ ? "Selected system: " + organ + ". Explain its role." : "Explain propulsion, reactor, buoyancy, navigation and life support.",
+           "Explain extended underwater endurance and distinguish nuclear propulsion from nuclear weapons. Give 4–6 verified interesting facts with sources. Do not discuss animal anatomy."].join("\n\n");
     } else if (link.dataset.category === "aviation") {
       prompt = language === "he"
         ? ["אני לומד על מטוס רייט פלייר משנת 1903, המטוס הממונע של האחים רייט.",
