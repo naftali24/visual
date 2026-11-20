@@ -51,6 +51,14 @@
         : ["Answer in " + languages[language] + ". I am learning about Maccabi Haifa football players in the 2026/27 season.",
            organ ? "Selected player: " + organ + "." : "Give a brief overview of the players.",
            "Explain the player's position, career and Maccabi Haifa contribution. Include 4–6 verified interesting facts and reliable sources. Check current data and state its date. Distinguish league from all-competition appearances, and appearances from starts. Squad 1 and Squad 2 are educational groups ranked by appearances, not official lineups. Do not invent missing information."].filter(Boolean).join("\n\n");
+    } else if (link.dataset.category === "automobile-history") {
+      prompt = language === "he"
+        ? ["אני לומד על פורד מודל T, שהוצג בשנת 1908.",
+           organ ? "החלק שבחרתי: " + organ + ". הסבר את תפקידו וכיצד פעל במודל T." : "הסבר את המבנה המכני ואת אופן הנהיגה במודל T.",
+           "השווה למכונית מודרנית והסבר את חשיבות הייצור ההמוני, פס הייצור והנרי פורד. הוסף 4–6 עובדות מעניינות ומאומתות עם קישורים למקורות אמינים. אל תדון באנטומיה של בעלי חיים."].join("\n\n")
+        : ["Answer in " + languages[language] + ". Explain the 1908 Ford Model T.",
+           organ ? "Selected component: " + organ + ". Explain how it worked." : "Explain its mechanics and driving controls.",
+           "Compare it with modern cars and discuss Henry Ford, mass production and the moving assembly line. Include 4–6 verified facts with sources. Do not discuss animal anatomy."].join("\n\n");
     } else if (link.dataset.category === "submarine") {
       prompt = language === "he"
         ? ["אני לומד מתוך הספר הוויזואלי של נפתלי על מבנה צוללת גרעינית.",
