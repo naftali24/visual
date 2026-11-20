@@ -7,7 +7,7 @@ body{display:flex;flex-direction:column;font-family:Arial,sans-serif}
 main{width:100%;max-width:1100px;min-height:0;flex:1;display:flex;flex-direction:column;justify-content:center;padding:4px 7px 3px}
 #stage{flex:0 1 auto;min-height:0;display:flex;flex-direction:column;padding:4px;background:#030302;border:1px solid #8b650e;border-radius:12px}
 .items{flex:none;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:3px;padding:2px 0;direction:rtl}
-.items button{min-height:34px;padding:2px 1px;font-size:clamp(9px,1.65vw,16px);line-height:1.1;background:linear-gradient(#ffe788,#d99a16);color:#241300;border:1px solid #b78b2b;border-radius:5px;overflow-wrap:anywhere}
+.items button{min-height:34px;padding:2px 1px;font-size:clamp(13px,2.3vw,21px);line-height:1.1;background:linear-gradient(#ffe788,#d99a16);color:#241300;border:1px solid #b78b2b;border-radius:5px;overflow-wrap:anywhere}
 #photo-wrap{position:relative;min-height:0;flex:1;display:flex;align-items:center;justify-content:center}
 #picture{display:block;width:auto;max-width:100%;height:auto;max-height:100%;object-fit:contain;margin:auto;background:none}
 #guides{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
@@ -18,33 +18,22 @@ main{width:100%;max-width:1100px;min-height:0;flex:1;display:flex;flex-direction
 #detail p{margin:0;font-size:inherit}
 .restart{position:fixed;top:7px;bottom:auto;width:46px;height:46px;opacity:1}
 .ask-gpt{left:7px;right:auto}
-#game-button{position:fixed;top:7px;right:62px;z-index:25;border:1px solid #e2b63e;border-radius:8px;background:#f8e8ad;color:#241805;font-size:23px;height:46px;width:46px}
 #page-title{text-align:center;margin:6px 108px 3px;color:#ffda68;font-size:clamp(16px,3vw,24px);flex:none}
-.game .items button{color:transparent;text-shadow:none}
-.game .items button.solved{color:#241300}
-.game #guides line{opacity:0}
-.game #guides line.solved{opacity:.75}
-#question{color:#ffe4a0;text-align:center;font-size:clamp(16px,3vw,23px);min-height:22px}
-@media(max-height:680px){#page-title{margin-top:2px;margin-bottom:1px}.items button{min-height:27px;font-size:clamp(8px,1.5vw,14px)}#detail{min-height:30px}}
+@media(max-height:680px){#page-title{margin-top:2px;margin-bottom:1px}.items button{min-height:27px;font-size:clamp(12px,2vw,18px)}#detail{min-height:30px}}
 </style></head><body>
 <a class="restart" href="../../index.html" target="_top" title="חזרה לנושאים">↻</a>
 <a class="restart ask-gpt" id="ask-gpt" href="https://chatgpt.com/" target="_blank" rel="noopener" data-subject-he="משפחת דוידוביץ" data-topic-he="משפחת דוידוביץ והקשרים המשפחתיים" data-subject-en="Davidovitz family" data-topic-en="Davidovitz family relationships">GPT</a>
-<button id="game-button" title="משחק" aria-label="משחק">🎮</button>
 <h1 id="page-title">משפחת דוידוביץ — נפתלי</h1>
 <main><div id="stage"><div class="items" id="above"></div><div id="photo-wrap"><img id="picture" src="../../images/davidovitz-family.webp" alt="24 תמונות בני משפחת דוידוביץ"><svg id="guides" aria-hidden="true"></svg></div><div class="items" id="below"></div></div>
-<div id="question"></div><section id="detail" aria-live="polite"><h2 id="term">משפחת דוידוביץ</h2><p id="info">לחצו על כפתור כדי לראות את הקשר המשפחתי.</p></section></main>
+<section id="detail" aria-live="polite"><h2 id="term">משפחת דוידוביץ</h2><p id="info">לחצו על כפתור כדי לראות את הקשר המשפחתי.</p></section></main>
 <script>
 const names=["נמרוד הורן","רוחלה (רחל) דוידוביץ","תמר דוידוביץ","נפתלי דוידוביץ","יצחק דוידוביץ","רות דוידוביץ","רון דוידוביץ","קשת דוידוביץ","קורן דוידוביץ","יעל דוידוביץ","שרה לרמן","טל לביא","ספי לביא","דרור לרמן","ליאור לביא","עומר לביא","עדי לרמן","נטע לרמן","שחר הורן","חנה בוקשפן","נאווה דוידוביץ","סימי רובין","שרה שוורץ","גלי אולוס"];
 const relations=["נכדו של נפתלי, בנה של תמר","אשתו בנפרד של נפתלי","בתו של נפתלי","בעל הפרויקט","אביו של נפתלי","אמו של נפתלי","בנו של נפתלי","נכדתו של נפתלי, בתו של רון","נכדו של נפתלי, בנו של רון","בתו של נפתלי","אחותו של נפתלי","בתה של שרה לרמן","בעלה של טל לביא","בנה של שרה לרמן","בתה של טל לביא","בנה של טל לביא","בת משפחה","בנם של עדי ודרור","נכדתו של נפתלי, בתה של תמר","בת משפחה","בת משפחה","בת משפחה","בת משפחה","נכדתו של נפתלי"];
 const above=document.getElementById('above'),below=document.getElementById('below'),picture=document.getElementById('picture'),guides=document.getElementById('guides');
 const items=names.map((name,i)=>({name,relation:relations[i],i,button:null}));
-let selected=-1,game=new URLSearchParams(location.search).get('game')==='1',remaining=[];
-function pick(i){if(game){if(remaining[0]!==i)return;remaining.shift();items[i].button.classList.add('solved');if(!remaining.length){document.getElementById('question').textContent='כל הכבוד!';}else question();}selected=i;document.getElementById('term').textContent=names[i];document.getElementById('info').textContent=relations[i];draw();}
-function question(){document.getElementById('question').textContent=remaining.length?'מצאו: '+names[remaining[0]]:''}
+let selected=-1;
+function pick(i){selected=i;document.getElementById('term').textContent=names[i];document.getElementById('info').textContent=relations[i];draw();}
 items.forEach((item,i)=>{const b=document.createElement('button');b.type='button';b.textContent=item.name;b.onclick=()=>pick(i);item.button=b;(i<12?above:below).append(b)});
 function draw(){const frame=guides.getBoundingClientRect(),photo=picture.getBoundingClientRect();if(!frame.width||!frame.height)return;guides.setAttribute('viewBox','0 0 '+frame.width+' '+frame.height);guides.replaceChildren();items.forEach((item,i)=>{const b=item.button.getBoundingClientRect(),col=i%6,row=Math.floor(i/6);const line=document.createElementNS('http://www.w3.org/2000/svg','line');const x=photo.left-frame.left+photo.width*((5-col)+.5)/6,y=photo.top-frame.top+photo.height*(row+.5)/4;line.setAttribute('x1',b.left+b.width/2-frame.left);line.setAttribute('y1',i<12?b.bottom-frame.top:b.top-frame.top);line.setAttribute('x2',x);line.setAttribute('y2',y);if(i===selected)line.classList.add('active');if(item.button.classList.contains('solved'))line.classList.add('solved');guides.append(line)})}
-function toggleGame(){game=!game;document.body.classList.toggle('game',game);items.forEach(x=>x.button.classList.remove('solved'));remaining=items.map(x=>x.i);if(game){question();document.getElementById('term').textContent='משחק משפחתי';document.getElementById('info').textContent='בחרו את הכפתור הנכון';}else{document.getElementById('question').textContent='';}draw()}
-document.getElementById('game-button').onclick=toggleGame;
-if(game){game=false;toggleGame()}
 picture.addEventListener('load',draw);window.addEventListener('resize',draw);new ResizeObserver(draw).observe(document.getElementById('stage'));draw();
 </script><script src="../../js/ask-gpt.js?v=1"></script><script src="../../js/viewport.js?v=11"></script></body></html>
