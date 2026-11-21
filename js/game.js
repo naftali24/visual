@@ -33,7 +33,7 @@
       (item.anchor[0]-horseBox[0])/horseBox[2],
       (item.anchor[1]-horseBox[1])/horseBox[3]
     ] : [item.x/1000,item.y/1000];
-    return {id:item.id,index:entries.indexOf(item),x,y,en:item.en,name:language==="he"?item.he:item.en};
+    return {id:item.id,index:entries.indexOf(item),x,y,en:item.en,he:item.he,name:language==="he"?item.he:item.en};
   });
   const make = (tag, className) => Object.assign(document.createElement(tag), {className});
   const game = make("section","atlas-game");
@@ -64,8 +64,24 @@
   const found = [];
   function currentQuestion(){
     const item = queue[0];
-    heading.textContent = item ? item.name : complete;
-    heading.setAttribute("aria-label",item ? question+" "+item.name : complete);
+    if (item) {
+      const names = [[item.he,"he","rtl"],[item.en,"en","ltr"]];
+      if (item.name !== item.he && item.name !== item.en) {
+        names.unshift([item.name,language,"auto"]);
+      }
+      const labels = names.filter(([name]) => name?.trim());
+      heading.replaceChildren(...labels.flatMap(([name,lang,dir],index) => {
+        const label = document.createElement("bdi");
+        label.lang = lang;
+        label.dir = dir;
+        label.textContent = name.trim();
+        return index ? [" · ",label] : [label];
+      }));
+      heading.setAttribute("aria-label",question+" "+labels.map(([name]) => name.trim()).join(" · "));
+    } else {
+      heading.textContent = complete;
+      heading.setAttribute("aria-label",complete);
+    }
     replay.hidden = Boolean(item);
   }
   function reset(){
@@ -240,13 +256,12 @@
       // The game remains playable when audio is unavailable.
     }
   }
-  const speechLocales = {he:"he-IL",en:"en-US",ar:"ar-SA",es:"es-ES",fr:"fr-FR",de:"de-DE",ru:"ru-RU",it:"it-IT",pt:"pt-PT"};
   function speakAnswer(item, done = () => {}){
     const thisRound = round;
     clearTimeout(speechFallback);
     const speech = window.speechSynthesis;
     const Utterance = window.SpeechSynthesisUtterance;
-    if (!speech || !Utterance) { done(); return; }
+    if (!speech || !Utterance || !item.en?.trim()) { done(); return; }
     let finished = false;
     let fallback;
     const finish = () => {
@@ -257,8 +272,8 @@
     };
     try {
       speech.cancel();
-      const answer = new Utterance(item.name);
-      answer.lang = language !== "he" && item.name === item.en ? "en-US" : speechLocales[language];
+      const answer = new Utterance(item.en.trim());
+      answer.lang = "en-US";
       answer.rate = .9;
       answer.onend = finish;
       answer.onerror = finish;
