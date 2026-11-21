@@ -13,13 +13,14 @@ main{width:100%;max-width:1100px;min-height:0;flex:1;display:flex;flex-direction
 #guides{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 #guides line{stroke:#e5845d;stroke-width:1.3;opacity:.8}
 #guides line.active{stroke:#ffda68;stroke-width:3;opacity:1}
-#detail{flex:none;min-height:42px;max-height:16vh;overflow:auto;margin:4px 0 0;padding:5px 8px;text-align:center;font-size:clamp(13px,2.1vw,19px);background:#fff7cf;color:#241800;border:1px solid #8b650e;border-radius:8px}
+#detail{flex:none;overflow:auto;margin:4px 0 0;padding:5px 8px;text-align:center;font-size:clamp(13px,2.1vw,19px);background:#fff7cf;color:#241800;border:1px solid #8b650e;border-radius:8px}
+#detail:not(.atlas-detail-overlay):not(.atlas-detail-scroll){min-height:92px;max-height:calc(16vh + 50px)}
 #detail h2{font-size:inherit;margin:0 0 2px}
 #detail p{margin:0;font-size:inherit}
 .restart{position:fixed;top:auto;bottom:12px;width:46px;height:46px;opacity:1}
 .ask-gpt{left:7px;right:auto}
 #page-title{text-align:center;margin:6px 8px 3px;color:#ffda68;font-size:clamp(16px,3vw,24px);flex:none}
-@media(max-height:680px){#page-title{margin-top:2px;margin-bottom:1px}.items button{min-height:27px;font-size:clamp(12px,2vw,18px)}#detail{min-height:30px}}
+@media(max-height:680px){#page-title{margin-top:2px;margin-bottom:1px}.items button{min-height:27px;font-size:clamp(12px,2vw,18px)}#detail:not(.atlas-detail-overlay):not(.atlas-detail-scroll){min-height:80px}}
 </style></head><body>
 <a class="restart" href="../../index.html" target="_top" title="חזרה לנושאים">↻</a>
 <a class="restart ask-gpt" id="ask-gpt" data-category="family" href="https://chatgpt.com/" target="_blank" rel="noopener" data-subject-he="משפחת דוידוביץ" data-topic-he="משפחת דוידוביץ והקשרים המשפחתיים" data-subject-en="Davidovitz family" data-topic-en="Davidovitz family relationships">GPT</a>
