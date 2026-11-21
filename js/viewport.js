@@ -86,6 +86,7 @@
           if (top) {
             const finalScale = Math.max(.01, Math.min(widthScale, (height - inset * 2) / main.offsetHeight));
             const overlayHeight = 100 / finalScale;
+            detail.style.top = Math.max(0, overlayTop - overlayHeight) + 'px';
             detail.style.height = overlayHeight + 'px';
             detail.style.maxHeight = overlayHeight + 'px';
           }
