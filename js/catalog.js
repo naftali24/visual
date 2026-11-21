@@ -106,12 +106,6 @@ for(const link of document.querySelectorAll("#topic-links a")){
   link.addEventListener("click",event=>{
     if(event.ctrlKey || event.metaKey || event.shiftKey || event.altKey)return;
     event.preventDefault();
-    if(link.hasAttribute("data-bilingual") && window.speechSynthesis && typeof SpeechSynthesisUtterance==="function"){
-      const title=new SpeechSynthesisUtterance(link.dataset.english);
-      title.lang="en-US";
-      window.speechSynthesis.cancel();
-      window.speechSynthesis.speak(title);
-    }
     lastLink=link;
     history.pushState(null,"","#"+slug);
     renderTopic();
