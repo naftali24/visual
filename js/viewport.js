@@ -85,11 +85,9 @@
           });
           if (top) {
             const finalScale = Math.max(.01, Math.min(widthScale, (height - inset * 2) / main.offsetHeight));
-            const extraHeight = Math.min(Math.max(0, overlayTop), 100 / finalScale);
-            const originalHeight = detail.offsetHeight;
-            detail.style.top = (overlayTop - extraHeight) + 'px';
-            detail.style.height = (originalHeight + extraHeight) + 'px';
-            detail.style.maxHeight = (bankHeight + extraHeight) + 'px';
+            const overlayHeight = 100 / finalScale;
+            detail.style.height = overlayHeight + 'px';
+            detail.style.maxHeight = overlayHeight + 'px';
           }
         }
       }
