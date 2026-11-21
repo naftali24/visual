@@ -66,17 +66,17 @@ function translateCatalog(){
     if(link)link.textContent=name;
   }
   topicTranslationRequest?.abort();
-  const extra=[...topics.entries()].filter(([slug,link])=>!link.hasAttribute("data-bilingual") && slug!=="horse" && slug!=="dog-internal-anatomy" && slug!=="greenland-shark" && slug!=="australia");
+  const extra=[...topics.entries()].filter(([slug])=>slug!=="horse" && slug!=="dog-internal-anatomy" && slug!=="greenland-shark" && slug!=="australia");
   for(const [,link] of extra)link.textContent=lang==="he"?link.dataset.original:link.dataset.english;
   if(!extra.length || lang==="en" || lang==="he")return;
   const request=new AbortController();
   topicTranslationRequest=request;
   const timeout=setTimeout(()=>request.abort(),6500);
-  const query=new URLSearchParams({client:"gtx",sl:"en",tl:lang,dt:"t",q:extra.map(([,link])=>link.dataset.english).join("\\n")});
+  const query=new URLSearchParams({client:"gtx",sl:"en",tl:lang,dt:"t",q:extra.map(([,link])=>link.dataset.english).join("\n")});
   fetch("https://translate.googleapis.com/translate_a/single?"+query,{signal:request.signal})
     .then(response=>{if(!response.ok)throw Error("Translation unavailable");return response.json();})
     .then(data=>{
-      const lines=data[0].map(segment=>segment[0]).join("").trim().split(/\\r?\\n/);
+      const lines=data[0].map(segment=>segment[0]).join("").trim().split(/\r?\n/);
       if(selector.value===lang && lines.length===extra.length && lines.every(line=>line.trim())){
         extra.forEach(([,link],i)=>{link.textContent=lines[i].trim();});
       }
@@ -126,9 +126,7 @@ function renderTopic(){
   source.searchParams.set("v","game-2");
   if(gameMode())source.searchParams.set("game","1");
   if(viewer.src!==source.href)viewer.src=source.href;
-  viewer.title=link.hasAttribute("data-bilingual")
-    ? `${link.dataset.original} · ${link.dataset.english}`
-    : link.textContent.trim();
+  viewer.title=link.textContent.trim();
   catalog.hidden=true;
   viewer.hidden=false;
   window.scrollTo(0,0);

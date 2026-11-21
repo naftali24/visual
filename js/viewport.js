@@ -75,8 +75,22 @@
           const y = Math.min(...boxes.map(box => box.top));
           const bottom = Math.max(...boxes.map(box => box.bottom));
           detail.classList.add('atlas-detail-overlay');
-          Object.assign(detail.style, {left:(left-parent.left)/factor+'px', top:(y-parent.top)/factor+'px',
-            width:(right-left)/factor+'px', maxHeight:(bottom-y)/factor+'px'});
+          const overlayTop = (y - parent.top) / factor;
+          const bankHeight = (bottom - y) / factor;
+          Object.assign(detail.style, {
+            left:(left-parent.left)/factor+'px',
+            top:overlayTop+'px',
+            width:(right-left)/factor+'px',
+            maxHeight:bankHeight+'px'
+          });
+          if (top) {
+            const finalScale = Math.max(.01, Math.min(widthScale, (height - inset * 2) / main.offsetHeight));
+            const extraHeight = Math.min(Math.max(0, overlayTop), 100 / finalScale);
+            const originalHeight = detail.offsetHeight;
+            detail.style.top = (overlayTop - extraHeight) + 'px';
+            detail.style.height = (originalHeight + extraHeight) + 'px';
+            detail.style.maxHeight = (bankHeight + extraHeight) + 'px';
+          }
         }
       }
     }
@@ -97,7 +111,7 @@
     .restart{width:44px;height:44px}
     #detail{position:relative;padding-right:80px;height:auto;min-height:0}
     #detail.atlas-detail-scroll{overflow:auto;overscroll-behavior:contain}
-    #detail.atlas-detail-overlay{position:absolute;min-height:0;z-index:10;margin:0;padding:10px 12px;
+    #detail.atlas-detail-overlay{position:absolute;box-sizing:border-box;min-height:0;z-index:10;margin:0;padding:10px 12px;
       overflow:auto;overscroll-behavior:contain;border-radius:6px;padding-right:80px}
     #detail .atlas-close-detail{position:absolute;right:0;top:0;width:64px;height:64px;
       border:2px solid #ffda68;border-radius:10px;background:linear-gradient(#ffe788,#d99a16);color:#241300;font:700 48px/1 Arial,sans-serif;cursor:pointer}
