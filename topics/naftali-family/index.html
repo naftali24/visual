@@ -14,9 +14,8 @@ main{width:100%;max-width:1100px;min-height:0;flex:1;display:flex;flex-direction
 #guides{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 #guides line{stroke:#e5845d;stroke-width:1.3;opacity:.8}
 #guides line.active{stroke:#ffda68;stroke-width:3;opacity:1}
-#family-detail{box-sizing:border-box;position:absolute;inset:0 0 auto;z-index:12;height:120px;overflow:auto;margin:0;padding:5px 38px;text-align:center;font-size:clamp(13px,2.1vw,19px);background:#fff7cf;color:#241800;border:1px solid #8b650e;border-radius:8px}
+#family-detail{box-sizing:border-box;position:absolute;inset:0 0 auto;z-index:12;height:var(--explanation-height,80px);top:var(--explanation-top,0px);overflow:auto;margin:0;padding:5px 38px;text-align:center;font-size:clamp(15px,2.2vw,19px);font-weight:700;background:#fff7cf;color:#241800;border:1px solid #8b650e;border-radius:8px}
 #upper-controls,#lower-controls{position:relative;flex:none}
-#lower-controls > #family-detail{top:0;height:110px}
 #family-detail[hidden]{display:none}
 #family-detail button{position:absolute;top:4px;width:30px;height:30px;cursor:pointer}
 #close-info{right:4px}#read-name{left:4px}
@@ -63,7 +62,20 @@ let currentSpeech;
 const detail=document.getElementById('family-detail');
 document.getElementById('close-info').onclick=()=>{detail.hidden=true;};
 document.getElementById('read-name').onclick=()=>speakName(records[selected]?.en);
-function pick(i){selected=i;speakName(records[i].en);items.forEach((item,j)=>item.button.setAttribute("aria-pressed",String(i===j)));term.textContent=names[i];info.textContent=relations[i];const note=window.atlasExplanations[records[i].id]?.en;infoEn.textContent=note?[records[i].en,note].filter(Boolean).join(' — '):'';infoEn.hidden=english||!note;const target=i<12?below.parentElement:above.parentElement;if(detail.parentElement!==target)target.append(detail);detail.hidden=false;detail.scrollTop=0;draw();}
+function pick(i){selected=i;speakName(records[i].en);items.forEach((item,j)=>item.button.setAttribute("aria-pressed",String(i===j)));term.textContent=names[i];info.textContent=relations[i];const note=window.atlasExplanations[records[i].id]?.en;infoEn.textContent=note?[records[i].en,note].filter(Boolean).join(' — '):'';infoEn.hidden=english||!note;const target=i<12?below.parentElement:above.parentElement;if(detail.parentElement!==target)target.append(detail);detail.hidden=false;detail.scrollTop=0;positionExplanation();draw();}
+function positionExplanation(){
+  if(detail.hidden)return;
+  const container=detail.parentElement;
+  const bounds=container.getBoundingClientRect();
+  const photo=picture.getBoundingClientRect();
+  const scale=bounds.width/container.offsetWidth||1;
+  const upper=container.id==='upper-controls';
+  const pageTop=window.visualViewport?.offsetTop||0;
+  const start=upper?pageTop:photo.bottom;
+  const height=upper?Math.max(0,photo.top-pageTop):80;
+  detail.style.setProperty('--explanation-top', (start-bounds.top)/scale+'px');
+  detail.style.setProperty('--explanation-height', height/scale+'px');
+}
 function speakName(name){
   if(!name?.trim() || !window.speechSynthesis || typeof window.SpeechSynthesisUtterance!=='function')return;
   const synth=window.speechSynthesis;
@@ -87,5 +99,5 @@ items.forEach((item,i)=>{const b=document.createElement('button');b.type='button
   }
   b.setAttribute('aria-pressed','false');b.setAttribute('data-person-name',item.name);b.onclick=()=>pick(i);item.button=b;(i<12?above:below).append(b)});
 function draw(){const frame=guides.getBoundingClientRect(),photo=picture.getBoundingClientRect();if(!frame.width||!frame.height)return;guides.setAttribute('viewBox','0 0 '+frame.width+' '+frame.height);guides.replaceChildren();items.forEach((item,i)=>{const b=item.button.getBoundingClientRect(),col=i%6,row=Math.floor(i/6);const line=document.createElementNS('http://www.w3.org/2000/svg','line');const x=photo.left-frame.left+photo.width*(records[i].x/1000),y=photo.top-frame.top+photo.height*(records[i].y/1000);line.setAttribute('x1',b.left+b.width/2-frame.left);line.setAttribute('y1',i<12?b.bottom-frame.top:b.top-frame.top);line.setAttribute('x2',x);line.setAttribute('y2',y);if(i===selected)line.classList.add('active');if(item.button.classList.contains('solved'))line.classList.add('solved');guides.append(line)})}
-picture.addEventListener('load',draw);window.addEventListener('resize',draw);window.addEventListener("atlas-layout",draw);new ResizeObserver(draw).observe(document.getElementById('stage'));draw();
+picture.addEventListener('load',draw);window.addEventListener('resize',draw);window.addEventListener("atlas-layout",()=>{positionExplanation();draw();});new ResizeObserver(draw).observe(document.getElementById('stage'));draw();
 </script><script src="../../js/ask-gpt.js?v=3"></script><script src="../../js/viewport.js?v=12"></script></body></html>
