@@ -14,7 +14,11 @@ main{width:100%;max-width:1100px;min-height:0;flex:1;display:flex;flex-direction
 #guides{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 #guides line{stroke:#e5845d;stroke-width:1.3;opacity:.8}
 #guides line.active{stroke:#ffda68;stroke-width:3;opacity:1}
-#family-detail{box-sizing:border-box;flex:0 0 70px;height:70px;overflow:auto;margin:4px 0 0;padding:5px 8px;text-align:center;font-size:clamp(13px,2.1vw,19px);background:#fff7cf;color:#241800;border:1px solid #8b650e;border-radius:8px}
+#family-detail{box-sizing:border-box;position:absolute;inset:0 0 auto;z-index:12;height:70px;overflow:auto;margin:0;padding:5px 38px;text-align:center;font-size:clamp(13px,2.1vw,19px);background:#fff7cf;color:#241800;border:1px solid #8b650e;border-radius:8px}
+#lower-controls{position:relative;flex:none}
+#family-detail[hidden]{display:none}
+#family-detail button{position:absolute;top:4px;width:30px;height:30px;cursor:pointer}
+#close-info{right:4px}#read-name{left:4px}
 #family-detail h2{font-size:inherit;margin:0 0 2px}
 #family-detail p{margin:0;font-size:inherit}
 .restart{position:fixed;top:auto;bottom:12px;width:46px;height:46px;opacity:1}
@@ -26,7 +30,7 @@ main{width:100%;max-width:1100px;min-height:0;flex:1;display:flex;flex-direction
 <a class="restart ask-gpt" id="ask-gpt" data-category="family" href="https://chatgpt.com/" target="_blank" rel="noopener" data-subject-he="משפחת דוידוביץ" data-topic-he="משפחת דוידוביץ והקשרים המשפחתיים" data-subject-en="Davidovitz family" data-topic-en="Davidovitz family relationships">GPT</a>
 <h1 id="page-title">משפחת דוידוביץ — נפתלי</h1>
 <main id="family-main"><div id="stage"><div class="items" id="above"></div><div id="photo-wrap"><img id="picture" src="../../images/davidovitz-family.jpg" alt="24 תמונות בני משפחת דוידוביץ"><svg id="guides" aria-hidden="true"></svg></div>
-<section id="family-detail" aria-live="polite"><h2 id="term">משפחת דוידוביץ</h2><p id="info">לחצו על כפתור כדי לראות את הקשר המשפחתי.</p><p id="info-en" lang="en" dir="ltr" hidden></p></section><div class="items" id="below"></div></div></main>
+<div id="lower-controls"><div class="items" id="below"></div><section id="family-detail" aria-live="polite" hidden><button id="close-info" type="button" aria-label="סגירה">×</button><button id="read-name" type="button" aria-label="Read name in English">🔊</button><h2 id="term">משפחת דוידוביץ</h2><p id="info">לחצו על כפתור כדי לראות את הקשר המשפחתי.</p><p id="info-en" lang="en" dir="ltr" hidden></p></section></div></div></main>
 <script src="../../data/naftali-family/atlasButtons.js"></script><script src="../../data/naftali-family/atlasExplanations.js?v=adi-lerman"></script>
 <script>
 const originalNames=["נמרוד הורן","רוחלה (רחל) דוידוביץ","תמר דוידוביץ","נפתלי דוידוביץ","יצחק דוידוביץ","רות דוידוביץ","רון דוידוביץ","קשת דוידוביץ","קורן דוידוביץ","יעל דוידוביץ","שרה לרמן","טל לביא","ספי לביא","דרור לרמן","ליאור לביא","עומר לביא","עדי לרמן","נטע לרמן","שחר הורן","חנה בוקשפן","נאווה דוידוביץ","סימי רובין","שרה שוורץ","גלי אולוס"];
@@ -54,13 +58,22 @@ const relations=records.map((it,i)=>window.atlasExplanations[it.id]?.[english?'e
 const above=document.getElementById('above'),below=document.getElementById('below'),picture=document.getElementById('picture'),guides=document.getElementById('guides');
 const items=names.map((name,i)=>({name,relation:relations[i],i,button:null}));
 let selected=-1;
-function pick(i){selected=i;items.forEach((item,j)=>item.button.setAttribute("aria-pressed",String(i===j)));term.textContent=names[i];info.textContent=relations[i];const note=window.atlasExplanations[records[i].id]?.en;infoEn.textContent=note?[records[i].en,note].filter(Boolean).join(' — '):'';infoEn.hidden=english||!note;draw();speakName(records[i].en);}
+let currentSpeech;
+const detail=document.getElementById('family-detail');
+document.getElementById('close-info').onclick=()=>{detail.hidden=true;};
+document.getElementById('read-name').onclick=()=>speakName(records[selected]?.en);
+function pick(i){selected=i;speakName(records[i].en);items.forEach((item,j)=>item.button.setAttribute("aria-pressed",String(i===j)));term.textContent=names[i];info.textContent=relations[i];const note=window.atlasExplanations[records[i].id]?.en;infoEn.textContent=note?[records[i].en,note].filter(Boolean).join(' — '):'';infoEn.hidden=english||!note;detail.hidden=false;detail.scrollTop=0;draw();}
 function speakName(name){
   if(!name?.trim() || !window.speechSynthesis || typeof window.SpeechSynthesisUtterance!=='function')return;
-  const speech=new window.SpeechSynthesisUtterance(name.trim());
-  speech.lang='en-US';
-  window.speechSynthesis.cancel();
-  window.speechSynthesis.speak(speech);
+  const synth=window.speechSynthesis;
+  if(synth.speaking || synth.pending)synth.cancel();
+  currentSpeech=new window.SpeechSynthesisUtterance(name.trim());
+  const voices=synth.getVoices();
+  const voice=voices.find(v=>v.lang==='en-US')||voices.find(v=>/^en(?:-|$)/i.test(v.lang));
+  if(voice)currentSpeech.voice=voice;
+  currentSpeech.lang=voice?.lang||'en-US';
+  if(synth.paused)synth.resume();
+  synth.speak(currentSpeech);
 }
 items.forEach((item,i)=>{const b=document.createElement('button');b.type='button';b.textContent=item.name;
   if(!english && records[i].en?.trim()){
@@ -73,5 +86,5 @@ items.forEach((item,i)=>{const b=document.createElement('button');b.type='button
   }
   b.setAttribute('aria-pressed','false');b.setAttribute('data-person-name',item.name);b.onclick=()=>pick(i);item.button=b;(i<12?above:below).append(b)});
 function draw(){const frame=guides.getBoundingClientRect(),photo=picture.getBoundingClientRect();if(!frame.width||!frame.height)return;guides.setAttribute('viewBox','0 0 '+frame.width+' '+frame.height);guides.replaceChildren();items.forEach((item,i)=>{const b=item.button.getBoundingClientRect(),col=i%6,row=Math.floor(i/6);const line=document.createElementNS('http://www.w3.org/2000/svg','line');const x=photo.left-frame.left+photo.width*(records[i].x/1000),y=photo.top-frame.top+photo.height*(records[i].y/1000);line.setAttribute('x1',b.left+b.width/2-frame.left);line.setAttribute('y1',i<12?b.bottom-frame.top:b.top-frame.top);line.setAttribute('x2',x);line.setAttribute('y2',y);if(i===selected)line.classList.add('active');if(item.button.classList.contains('solved'))line.classList.add('solved');guides.append(line)})}
-picture.addEventListener('load',draw);window.addEventListener('resize',draw);new ResizeObserver(draw).observe(document.getElementById('stage'));draw();
+picture.addEventListener('load',draw);window.addEventListener('resize',draw);window.addEventListener("atlas-layout",draw);new ResizeObserver(draw).observe(document.getElementById('stage'));draw();
 </script><script src="../../js/ask-gpt.js?v=3"></script><script src="../../js/viewport.js?v=12"></script></body></html>
