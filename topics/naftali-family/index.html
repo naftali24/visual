@@ -15,7 +15,7 @@ main{width:100%;max-width:1100px;min-height:0;flex:1;display:flex;flex-direction
 #guides line{stroke:#e5845d;stroke-width:1.3;opacity:.8}
 #guides line.active{stroke:#ffda68;stroke-width:3;opacity:1}
 #family-detail{box-sizing:border-box;position:absolute;inset:0 0 auto;z-index:12;height:120px;overflow:auto;margin:0;padding:5px 38px;text-align:center;font-size:clamp(13px,2.1vw,19px);background:#fff7cf;color:#241800;border:1px solid #8b650e;border-radius:8px}
-#lower-controls{position:relative;flex:none}
+#upper-controls,#lower-controls{position:relative;flex:none}
 #family-detail[hidden]{display:none}
 #family-detail button{position:absolute;top:4px;width:30px;height:30px;cursor:pointer}
 #close-info{right:4px}#read-name{left:4px}
@@ -29,7 +29,7 @@ main{width:100%;max-width:1100px;min-height:0;flex:1;display:flex;flex-direction
 <a class="restart" href="../../index.html" target="_top" title="חזרה לנושאים">↻</a>
 <a class="restart ask-gpt" id="ask-gpt" data-category="family" href="https://chatgpt.com/" target="_blank" rel="noopener" data-subject-he="משפחת דוידוביץ" data-topic-he="משפחת דוידוביץ והקשרים המשפחתיים" data-subject-en="Davidovitz family" data-topic-en="Davidovitz family relationships">GPT</a>
 <h1 id="page-title">משפחת דוידוביץ — נפתלי</h1>
-<main id="family-main"><div id="stage"><div class="items" id="above"></div><div id="photo-wrap"><img id="picture" src="../../images/davidovitz-family.jpg" alt="24 תמונות בני משפחת דוידוביץ"><svg id="guides" aria-hidden="true"></svg></div>
+<main id="family-main"><div id="stage"><div id="upper-controls"><div class="items" id="above"></div></div><div id="photo-wrap"><img id="picture" src="../../images/davidovitz-family.jpg" alt="24 תמונות בני משפחת דוידוביץ"><svg id="guides" aria-hidden="true"></svg></div>
 <div id="lower-controls"><div class="items" id="below"></div><section id="family-detail" aria-live="polite" hidden><button id="close-info" type="button" aria-label="סגירה">×</button><button id="read-name" type="button" aria-label="Read name in English">🔊</button><h2 id="term">משפחת דוידוביץ</h2><p id="info">לחצו על כפתור כדי לראות את הקשר המשפחתי.</p><p id="info-en" lang="en" dir="ltr" hidden></p></section></div></div></main>
 <script src="../../data/naftali-family/atlasButtons.js"></script><script src="../../data/naftali-family/atlasExplanations.js?v=adi-lerman"></script>
 <script>
@@ -62,7 +62,7 @@ let currentSpeech;
 const detail=document.getElementById('family-detail');
 document.getElementById('close-info').onclick=()=>{detail.hidden=true;};
 document.getElementById('read-name').onclick=()=>speakName(records[selected]?.en);
-function pick(i){selected=i;speakName(records[i].en);items.forEach((item,j)=>item.button.setAttribute("aria-pressed",String(i===j)));term.textContent=names[i];info.textContent=relations[i];const note=window.atlasExplanations[records[i].id]?.en;infoEn.textContent=note?[records[i].en,note].filter(Boolean).join(' — '):'';infoEn.hidden=english||!note;detail.hidden=false;detail.scrollTop=0;draw();}
+function pick(i){selected=i;speakName(records[i].en);items.forEach((item,j)=>item.button.setAttribute("aria-pressed",String(i===j)));term.textContent=names[i];info.textContent=relations[i];const note=window.atlasExplanations[records[i].id]?.en;infoEn.textContent=note?[records[i].en,note].filter(Boolean).join(' — '):'';infoEn.hidden=english||!note;const target=i<12?below.parentElement:above.parentElement;if(detail.parentElement!==target)target.append(detail);detail.hidden=false;detail.scrollTop=0;draw();}
 function speakName(name){
   if(!name?.trim() || !window.speechSynthesis || typeof window.SpeechSynthesisUtterance!=='function')return;
   const synth=window.speechSynthesis;
