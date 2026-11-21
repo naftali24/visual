@@ -66,7 +66,7 @@ function translateCatalog(){
     if(link)link.textContent=name;
   }
   topicTranslationRequest?.abort();
-  const extra=[...topics.entries()].filter(([slug])=>slug!=="horse" && slug!=="dog-internal-anatomy" && slug!=="greenland-shark" && slug!=="australia");
+  const extra=[...topics.entries()].filter(([slug,link])=>!link.hasAttribute("data-bilingual") && slug!=="horse" && slug!=="dog-internal-anatomy" && slug!=="greenland-shark" && slug!=="australia");
   for(const [,link] of extra)link.textContent=lang==="he"?link.dataset.original:link.dataset.english;
   if(!extra.length || lang==="en" || lang==="he")return;
   const request=new AbortController();
@@ -100,12 +100,18 @@ for(const link of document.querySelectorAll("#topic-links a")){
   const slug=link.getAttribute("href").match(/^\.\/topics\/([a-z0-9-]+)\/(?:index\.html)?$/)?.[1];
   if(!slug)continue;
   topics.set(slug,link);
-  link.dataset.original=link.textContent.trim();
-  link.dataset.english=slug==="maccabi-haifa-26-squad-1"?"Maccabi Haifa 26 — Squad 1":slug==="maccabi-haifa-26-squad-2"?"Maccabi Haifa 26 — Squad 2":slug==="israel-presidents-2026"?"Presidents of Israel — through 2026":slug==="flying-roadster"?"Musk – The Flying Car":slug.replace(/-\d{8}-[a-f0-9]{6}$/,"")
-    .split("-").map(word=>word.charAt(0).toUpperCase()+word.slice(1)).join(" ");
+  link.dataset.original=link.querySelector('[lang="he"]')?.textContent.trim() || link.textContent.trim();
+  link.dataset.english=link.querySelector('[lang="en"]')?.textContent.trim() || (slug==="maccabi-haifa-26-squad-1"?"Maccabi Haifa 26 — Squad 1":slug==="maccabi-haifa-26-squad-2"?"Maccabi Haifa 26 — Squad 2":slug==="israel-presidents-2026"?"Presidents of Israel — through 2026":slug==="flying-roadster"?"Musk – The Flying Car":slug.replace(/-\d{8}-[a-f0-9]{6}$/,"")
+    .split("-").map(word=>word.charAt(0).toUpperCase()+word.slice(1)).join(" "));
   link.addEventListener("click",event=>{
     if(event.ctrlKey || event.metaKey || event.shiftKey || event.altKey)return;
     event.preventDefault();
+    if(link.hasAttribute("data-bilingual") && window.speechSynthesis && typeof SpeechSynthesisUtterance==="function"){
+      const title=new SpeechSynthesisUtterance(link.dataset.english);
+      title.lang="en-US";
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(title);
+    }
     lastLink=link;
     history.pushState(null,"","#"+slug);
     renderTopic();
@@ -126,7 +132,9 @@ function renderTopic(){
   source.searchParams.set("v","game-2");
   if(gameMode())source.searchParams.set("game","1");
   if(viewer.src!==source.href)viewer.src=source.href;
-  viewer.title=link.textContent.trim();
+  viewer.title=link.hasAttribute("data-bilingual")
+    ? `${link.dataset.original} · ${link.dataset.english}`
+    : link.textContent.trim();
   catalog.hidden=true;
   viewer.hidden=false;
   window.scrollTo(0,0);
