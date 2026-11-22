@@ -15,7 +15,11 @@
   function updateLink() {
     const organ = link.dataset.category === "family" ? document.querySelector('[data-person-name][aria-pressed="true"]')?.getAttribute("data-person-name") : document.querySelector('[aria-pressed="true"] [lang="en"]')?.textContent.trim();
     let prompt;
-    if (link.dataset.category === "car-logos") {
+    if (link.dataset.category === "composers") {
+      prompt=language === "he"
+        ? ["אני לומד מתוך ספר ויזואלי של נפתלי על 12 מגדולי המלחינים הקלאסיים.",organ ? "המלחין שבחרתי: "+organ+"." : "הצג את המלחינים ואת התקופות המוזיקליות שלהם.","הסבר על חייו, סגנונו, חידושיו ויצירותיו המפורסמות. תן דוגמאות למה להקשיב ביצירותיו ועובדות מעניינות עם מקורות אמינים. הבחן בין עובדות לסיפורים שלא אומתו. הדיוקנאות הם המחשות אמנותיות ולא תצלומים או העתקים מדויקים. הרשימה היא מבחר לימודי ולא דירוג מוסכם. התמקד במוזיקה ובביוגרפיה."].join("\n\n")
+        : ["Answer in "+languages[language]+". I am studying twelve great classical composers.",organ ? "Selected composer: "+organ+"." : "Introduce the composers and their musical periods.","Explain biography, musical style, innovations and major works. Suggest what to listen for and give verified interesting facts with reliable sources. Distinguish fact from anecdote. These portraits are artistic illustrations; the selection is educational, not a definitive ranking."].join("\n\n");
+    } else if (link.dataset.category === "car-logos") {
       prompt=language === "he"
         ? ["אני לומד מתוך ספר ויזואלי של נפתלי על סמלי מותגי רכב.",organ ? "המותג שבחרתי: "+organ+"." : "הסבר כיצד לזהות את 18 הסמלים באיור.","הסבר על המותג, ארץ המקור, מאפייני הסמל וההיסטוריה שלו. הבא עובדות מעניינות עם מקורות אמינים. התמונה היא המחשה שנוצרה ולא קובץ סמל רשמי; ייתכנו הבדלים בגרסאות ובפרטים. הבחן בין מקור מתועד של הסמל לבין סיפור עממי, ובדוק מידע עדכני על בעלות ודגמים. התמקד במכוניות ובסמלים."].join("\n\n")
         : ["Answer in "+languages[language]+". Explain car brand logos.",organ ? "Selected brand: "+organ+"." : "Explain the 18 illustrated logos.","Discuss origin, recognition features and documented logo history with reliable sources. This is a generated illustration, not official logo artwork. Distinguish documented history from popular myths and check current ownership or model information."].join("\n\n");
