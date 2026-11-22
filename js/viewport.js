@@ -33,7 +33,7 @@
     const width = viewport?.width || document.documentElement.clientWidth;
     const height = viewport?.height || window.innerHeight;
     const inset = 8;
-    main.style.width = Math.min(1050, width) + 'px';
+    main.style.width = width + 'px';
     const detail = document.getElementById('detail');
     let footerSpace = 0;
     let overlayScaleLimit = Infinity;
@@ -118,6 +118,7 @@
   style.textContent = `html,body{height:100%;min-height:0;overflow:hidden}
     body{padding:0}body>main{position:absolute;margin:0;max-width:none;
     transform-origin:top center;padding:4px}
+    #stage>#picture{width:100%;height:auto;object-fit:contain}
     .restart{width:44px;height:44px}
     #detail{position:relative;padding-right:80px;height:auto;min-height:0}
     #detail.atlas-detail-scroll{overflow:auto;overscroll-behavior:contain}
@@ -133,6 +134,7 @@
   new MutationObserver(records => {
     if (records.some(record => !record.target.closest?.("#guides, #leaders"))) schedule();
   }).observe(main, {childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:['hidden']});
+  document.getElementById('picture')?.addEventListener('load', schedule);
   window.addEventListener('resize', schedule);
   window.visualViewport?.addEventListener('resize', schedule);
   window.visualViewport?.addEventListener('scroll', schedule);
