@@ -19,6 +19,16 @@ gameToggle.addEventListener("click",()=>{
   history.replaceState(null,"",address);
   translateCatalog();
 });
+// Keep fullscreen on the outer document so topic changes do not exit it.
+function enterAtlasFullscreen(){
+  if(document.fullscreenElement || document.webkitFullscreenElement)return;
+  if(window.matchMedia('(display-mode: fullscreen)').matches || window.matchMedia('(display-mode: standalone)').matches)return;
+  const root=document.documentElement;
+  try {
+    const result=root.requestFullscreen ? root.requestFullscreen({navigationUI:'hide'}) : root.webkitRequestFullscreen?.();
+    result?.catch(()=>{});
+  } catch {}
+}
 let lastLink;
 const labels={
   en:["Naftali’s Visual Book","Topics","Horse – Internal Anatomy","Dog – Internal Anatomy","Atlas language"],
@@ -106,6 +116,7 @@ for(const link of document.querySelectorAll("#topic-links a")){
   link.addEventListener("click",event=>{
     if(event.ctrlKey || event.metaKey || event.shiftKey || event.altKey)return;
     event.preventDefault();
+    enterAtlasFullscreen();
     lastLink=link;
     history.pushState(null,"","#"+slug);
     renderTopic();
@@ -123,7 +134,7 @@ function renderTopic(){
   }
   const source=new URL(link.href);
   source.searchParams.set("lang",selector.value);
-  source.searchParams.set("v","viewport-13");
+  source.searchParams.set("v","shared-fullscreen-1");
   if(gameMode())source.searchParams.set("game","1");
   if(viewer.src!==source.href)viewer.src=source.href;
   viewer.title=link.textContent.trim();
@@ -137,6 +148,9 @@ window.addEventListener("message",event=>{
      event.data!=="visual-atlas-home")return;
   history.replaceState(null,"",location.pathname+location.search);
   renderTopic();
+});
+document.addEventListener('click',event=>{
+  if(!viewer.hidden && !event.target.closest('a[target="_blank"]'))enterAtlasFullscreen();
 });
 translateCatalog();
 renderTopic();

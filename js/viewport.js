@@ -2,6 +2,14 @@
 // visible viewport. Transform preserves the artwork and all target positions.
 (() => {
   const main = document.querySelector('main');
+  // Family and legacy pages must return inside the outer viewer, preserving fullscreen.
+  document.querySelector('a.restart:not(.ask-gpt)')?.addEventListener('click', event => {
+    if(window.parent !== window && location.protocol !== 'file:') {
+      event.preventDefault();
+      window.speechSynthesis?.cancel();
+      window.parent.postMessage('visual-atlas-home', location.origin);
+    }
+  });
   // Game control is shared by every topic page, centered between Home and GPT.
   const gameButton = document.createElement('button');
   gameButton.type = 'button';
