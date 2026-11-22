@@ -36,6 +36,7 @@
     main.style.width = Math.min(1050, width) + 'px';
     const detail = document.getElementById('detail');
     let footerSpace = 0;
+    let overlayScaleLimit = Infinity;
     if (detail && !detail.hidden && !document.documentElement.classList.contains('atlas-playing')) {
       // Measure the explanation in normal flow each time. A previous overlay
       // must not force later, shorter explanations (or larger screens) to overlay.
@@ -83,7 +84,17 @@
             width:(right-left)/factor+'px',
             maxHeight:bankHeight+'px'
           });
-          if (top) {
+          if (top && document.body.hasAttribute('data-mediterranean-layout')) {
+            const photo = document.getElementById('picture').getBoundingClientRect();
+            const photoBottom = (photo.bottom - parent.top) / factor;
+            footerSpace = 52;
+            const usableHeight = height - inset * 2 - footerSpace;
+            const panelHeight = Math.min(200, Math.max(1, usableHeight - photoBottom * .01));
+            overlayScaleLimit = (usableHeight - panelHeight) / photoBottom;
+            const scale = Math.max(.01, Math.min(widthScale, usableHeight / main.offsetHeight, overlayScaleLimit));
+            detail.style.top = photoBottom + 'px';
+            detail.style.height = detail.style.maxHeight = panelHeight / scale + 'px';
+          } else if (top) {
             const finalScale = Math.max(.01, Math.min(widthScale, (height - inset * 2) / main.offsetHeight));
             const overlayHeight = 250 / finalScale;
             detail.style.top = Math.max(0, overlayTop - 100 / finalScale) + 'px';
@@ -93,7 +104,7 @@
         }
       }
     }
-    const scale = Math.min(1, (width - inset * 2) / main.offsetWidth,
+    const scale = Math.min(1, overlayScaleLimit, (width - inset * 2) / main.offsetWidth,
       (height - inset * 2 - footerSpace) / main.offsetHeight);
     main.style.transform = `translateX(-50%) scale(${Math.max(.01, scale)})`;
     main.style.top = ((viewport?.offsetTop || 0) + inset) + 'px';
