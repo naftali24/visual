@@ -15,7 +15,11 @@
   function updateLink() {
     const organ = link.dataset.category === "family" ? document.querySelector('[data-person-name][aria-pressed="true"]')?.getAttribute("data-person-name") : document.querySelector('[aria-pressed="true"] [lang="en"]')?.textContent.trim();
     let prompt;
-    if (link.dataset.category === "composers") {
+    if (link.dataset.category === "fighter-aircraft") {
+      prompt=language === "he"
+        ? ["אני לומד מתוך ספר ויזואלי של נפתלי על מבנה מטוס F-16.",organ ? "החלק שבחרתי: "+organ+"." : "הסבר את החלקים העיקריים של המטוס.","הסבר בעברית פשוטה את תפקיד החלק וכיצד הוא משתלב בטיסה. הוסף רקע היסטורי ועובדות מעניינות עם מקורות רשמיים פומביים. הבחן בין גרסאות המטוס ובין עובדות להשערות. האיור הוא המחשה כללית שנוצרה ב-AI ולא שרטוט טכני מדויק. התמקד במבנה ובעקרונות טיסה כלליים."].join("\n\n")
+        : ["Answer in "+languages[language]+". Explain the F-16 aircraft structure.",organ ? "Selected part: "+organ+"." : "Introduce the main aircraft parts.","Explain the part’s role and general flight principles, with historical context and interesting facts supported by official public sources. Distinguish variants and uncertainty. The image is an AI-generated illustration, not a precise technical drawing."].join("\n\n");
+    } else if (link.dataset.category === "composers") {
       prompt=language === "he"
         ? ["אני לומד מתוך ספר ויזואלי של נפתלי על 12 מגדולי המלחינים הקלאסיים.",organ ? "המלחין שבחרתי: "+organ+"." : "הצג את המלחינים ואת התקופות המוזיקליות שלהם.","הסבר על חייו, סגנונו, חידושיו ויצירותיו המפורסמות. תן דוגמאות למה להקשיב ביצירותיו ועובדות מעניינות עם מקורות אמינים. הבחן בין עובדות לסיפורים שלא אומתו. הדיוקנאות הם המחשות אמנותיות ולא תצלומים או העתקים מדויקים. הרשימה היא מבחר לימודי ולא דירוג מוסכם. התמקד במוזיקה ובביוגרפיה."].join("\n\n")
         : ["Answer in "+languages[language]+". I am studying twelve great classical composers.",organ ? "Selected composer: "+organ+"." : "Introduce the composers and their musical periods.","Explain biography, musical style, innovations and major works. Suggest what to listen for and give verified interesting facts with reliable sources. Distinguish fact from anecdote. These portraits are artistic illustrations; the selection is educational, not a definitive ranking."].join("\n\n");
