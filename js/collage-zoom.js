@@ -5,7 +5,7 @@
   const uniform=(columns,rows)=>Array.from({length:rows},(_,row)=>({top:row/rows,bottom:(row+1)/rows,edges:Array.from({length:columns+1},(_,i)=>i/columns)}));
   let rows;
   if(/^car-logos-/.test(slug) || slug==='historical-figures-18')rows=uniform(6,3);
-  else if(/^great-composers-/.test(slug) || /^football-clubs-/.test(slug) || slug==='beatles-12-songs' || slug==='f16-cockpit-instruments-12')rows=uniform(4,3);
+  else if(/^great-composers-/.test(slug) || (/^football-clubs-/.test(slug) || slug==='football-legends-12') || slug==='beatles-12-songs' || slug==='f16-cockpit-instruments-12')rows=uniform(4,3);
   else if(/^classic-paintings-/.test(slug) || slug==='famous-movies-9')rows=uniform(3,3);
   else if(slug==='naftali-family')rows=uniform(6,4);
   else if(/^goalkeeper-video-/.test(slug))rows=uniform(2,3);
