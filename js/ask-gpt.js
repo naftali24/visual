@@ -17,8 +17,8 @@
     let prompt;
     if (link.dataset.category === "goalkeeping") {
       prompt = language === "he"
-        ? ["אני לומד מתוך ספר ויזואלי של נפתלי על " + link.dataset.topicHe + ".", organ ? "התנוחה שבחרתי: " + organ + "." : "הסבר את חמש התנוחות וההצלות באיור.", "הסבר בשפה פשוטה את עמידת הגוף, עבודת הרגליים, תנועת הידיים, התזמון והנחיתה. הבחן בין תפיסה להדיפה. התמונה היא המחשה בלבד. הבא מקורות אימון אמינים ואל תמציא כללים רשמיים או נתונים. התמקד בשוערות."].filter(Boolean).join("\n\n")
-        : ["Answer in " + languages[language] + ". Explain " + link.dataset.topicEn + ".", organ ? "Selected stance or save: " + organ + "." : "Explain the five illustrated stances and saves.", "Explain body position, footwork, hands, timing and landing. Distinguish catching from parrying. Treat the image as an illustration. Cite reliable coaching sources and do not invent official classifications or statistics."].filter(Boolean).join("\n\n");
+        ? ["אני לומד מתוך ספר ויזואלי של נפתלי על " + link.dataset.topicHe + ".", organ ? "התנוחה שבחרתי: " + organ + "." : "הסבר את חמש התנוחות וההצלות באיור.", "הסבר בשפה פשוטה את עמידת הגוף, עבודת הרגליים, תנועת הידיים, התזמון והנחיתה. הבחן בין תפיסה, הדיפה ומשחק רגל בהתאם לנושא. התמונה היא המחשה בלבד. הבא מקורות אימון אמינים ואל תמציא כללים רשמיים או נתונים. התמקד בשוערות."].filter(Boolean).join("\n\n")
+        : ["Answer in " + languages[language] + ". Explain " + link.dataset.topicEn + ".", organ ? "Selected stance or save: " + organ + "." : "Explain the five illustrated stances and saves.", "Explain body position, footwork, hands, timing and landing. Discuss catching, parrying or footwork as appropriate to this topic. Treat the image as an illustration. Cite reliable coaching sources and do not invent official classifications or statistics."].filter(Boolean).join("\n\n");
     } else if (link.dataset.category === "history") {
       prompt = language === "he"
         ? ["אני לומד מתוך ספר ויזואלי של נפתלי.",
