@@ -15,7 +15,11 @@
   function updateLink() {
     const organ = link.dataset.category === "family" ? document.querySelector('[data-person-name][aria-pressed="true"]')?.getAttribute("data-person-name") : document.querySelector('[aria-pressed="true"] [lang="en"]')?.textContent.trim();
     let prompt;
-    if (link.dataset.category === "goalkeeping") {
+    if (link.dataset.category === "car-logos") {
+      prompt=language === "he"
+        ? ["אני לומד מתוך ספר ויזואלי של נפתלי על סמלי מותגי רכב.",organ ? "המותג שבחרתי: "+organ+"." : "הסבר כיצד לזהות את 18 הסמלים באיור.","הסבר על המותג, ארץ המקור, מאפייני הסמל וההיסטוריה שלו. הבא עובדות מעניינות עם מקורות אמינים. התמונה היא המחשה שנוצרה ולא קובץ סמל רשמי; ייתכנו הבדלים בגרסאות ובפרטים. הבחן בין מקור מתועד של הסמל לבין סיפור עממי, ובדוק מידע עדכני על בעלות ודגמים. התמקד במכוניות ובסמלים."].join("\n\n")
+        : ["Answer in "+languages[language]+". Explain car brand logos.",organ ? "Selected brand: "+organ+"." : "Explain the 18 illustrated logos.","Discuss origin, recognition features and documented logo history with reliable sources. This is a generated illustration, not official logo artwork. Distinguish documented history from popular myths and check current ownership or model information."].join("\n\n");
+    } else if (link.dataset.category === "goalkeeping") {
       prompt = language === "he"
         ? ["אני לומד מתוך ספר ויזואלי של נפתלי על " + link.dataset.topicHe + ".", organ ? "התנוחה שבחרתי: " + organ + "." : "הסבר את חמש התנוחות וההצלות באיור.", "הסבר בשפה פשוטה את עמידת הגוף, עבודת הרגליים, תנועת הידיים, התזמון והנחיתה. הבחן בין תפיסה, הדיפה ומשחק רגל בהתאם לנושא. התמונה היא המחשה בלבד. הבא מקורות אימון אמינים ואל תמציא כללים רשמיים או נתונים. התמקד בשוערות."].filter(Boolean).join("\n\n")
         : ["Answer in " + languages[language] + ". Explain " + link.dataset.topicEn + ".", organ ? "Selected stance or save: " + organ + "." : "Explain the five illustrated stances and saves.", "Explain body position, footwork, hands, timing and landing. Discuss catching, parrying or footwork as appropriate to this topic. Treat the image as an illustration. Cite reliable coaching sources and do not invent official classifications or statistics."].filter(Boolean).join("\n\n");
