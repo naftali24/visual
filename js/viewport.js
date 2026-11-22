@@ -127,6 +127,9 @@
     body{padding:0}body>main{position:absolute;margin:0;max-width:none;
     transform-origin:top center;padding:4px}
     #stage>#picture{width:100%;height:auto;object-fit:contain}
+    .items button[aria-pressed="true"]{background:linear-gradient(#fff9ca,#ffe36e 55%,#efb52d)!important;border-color:#fff4b0!important;box-shadow:inset 0 0 0 1px #fff8ce,0 0 9px #ffd44b!important;color:#241300!important}
+    .items button[aria-pressed="true"] span{color:#241300!important;text-shadow:0 0 2px #fff4b0}
+    #labels .label.active rect{fill:#ffe36e;stroke:#fff4b0;stroke-width:2;filter:drop-shadow(0 0 3px #ffd44b)}
     .restart{width:44px;height:44px}
     #detail{position:relative;padding-right:80px;height:auto;min-height:0}
     #detail.atlas-detail-scroll{overflow:auto;overscroll-behavior:contain}
