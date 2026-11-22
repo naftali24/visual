@@ -84,7 +84,7 @@
             width:(right-left)/factor+'px',
             maxHeight:bankHeight+'px'
           });
-          if (top && document.body.hasAttribute('data-mediterranean-layout')) {
+          if (top && document.body.matches('[data-mediterranean-layout], [data-explanation-at-image-bottom]')) {
             const photo = document.getElementById('picture').getBoundingClientRect();
             const photoBottom = (photo.bottom - parent.top) / factor;
             footerSpace = 52;
