@@ -33,11 +33,19 @@
   document.head.append(style);
   picture.style.cursor='zoom-in';
   picture.tabIndex=0;picture.setAttribute('role','button');picture.setAttribute('aria-label',(picture.alt || '')+' — לחצו להגדלה / Select a picture to enlarge');picture.setAttribute('aria-expanded','false');
+  let closeTimer;
+  let returnFocus=picture;
   function layout(){
-    Object.assign(overlay.style,{left:picture.offsetLeft+'px',top:picture.offsetTop+'px',width:picture.offsetWidth+'px',height:picture.offsetHeight+'px'});
+    const width=picture.offsetWidth*.8,height=picture.offsetHeight*.8;
+    Object.assign(overlay.style,{left:(picture.offsetLeft+(picture.offsetWidth-width)/2)+'px',top:(picture.offsetTop+(picture.offsetHeight-height)/2)+'px',width:width+'px',height:height+'px'});
   }
-  function dismiss(){overlay.hidden=true;picture.setAttribute('aria-expanded','false');picture.focus({preventScroll:true});}
-  function open(x,y){
+  function dismiss(){
+    clearTimeout(closeTimer);
+    const restore=overlay.contains?.(document.activeElement);
+    overlay.hidden=true;picture.setAttribute('aria-expanded','false');
+    if(restore)returnFocus.focus({preventScroll:true});
+  }
+  function open(x,y,source=picture){
     if(playing() || !picture.naturalWidth)return;
     const row=rows.find(r=>y>=r.top && y<r.bottom);if(!row)return;
     const col=row.edges.findIndex((edge,i)=>i<row.edges.length-1 && x>=edge && x<row.edges[i+1]);if(col<0)return;
@@ -48,12 +56,31 @@
     canvas.height=Math.max(1,Math.round((row.bottom-row.top)*picture.naturalHeight));
     canvas.getContext('2d').drawImage(picture,left*picture.naturalWidth,row.top*picture.naturalHeight,(right-left)*picture.naturalWidth,(row.bottom-row.top)*picture.naturalHeight,0,0,canvas.width,canvas.height);
     canvas.setAttribute('aria-label','תמונה מוגדלת / Enlarged picture');
-    layout();overlay.hidden=false;picture.setAttribute('aria-expanded','true');close.focus({preventScroll:true});
+    clearTimeout(closeTimer);returnFocus=source;
+    layout();overlay.hidden=false;picture.setAttribute('aria-expanded','true');
+    if(source===picture)close.focus({preventScroll:true});
+    closeTimer=setTimeout(dismiss,3000);
   }
   picture.addEventListener('click',event=>{
     const rect=picture.getBoundingClientRect();open((event.clientX-rect.left)/rect.width,(event.clientY-rect.top)/rect.height);
   });
   picture.addEventListener('keydown',event=>{if(event.key==='Enter' || event.key===' '){event.preventDefault();open((rows[0].edges[0]+rows[0].edges[1])/2,(rows[0].top+rows[0].bottom)/2);}});
+  // Match the actual label, rather than visual button order (which can be sorted).
+  document.addEventListener('click',event=>{
+    const button=event.target.closest?.('.items button');
+    if(!button || playing())return;
+    const records=window.atlasPage?.items || [];
+    let item;
+    if(slug==='naftali-family'){
+      const index=[...document.querySelectorAll('.items button')].indexOf(button);
+      item=records[index];
+    } else {
+      const name=button.querySelector('[lang="en"]')?.textContent.trim();
+      item=records.find(record=>record.en.trim()===name);
+    }
+    if(item)open(item.x/1000,item.y/1000,button);
+  });
+  window.addEventListener('pagehide',()=>clearTimeout(closeTimer));
   overlay.addEventListener('click',dismiss);
   document.addEventListener('keydown',event=>{if(event.key==='Escape' && !overlay.hidden){event.preventDefault();dismiss();}});
   window.addEventListener('atlas-layout',layout);
