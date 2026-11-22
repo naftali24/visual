@@ -2,11 +2,10 @@
   "id": "/visual/",
   "name": "ספר ויזואלי של נפתלי",
   "short_name": "ספר ויזואלי",
-  "start_url": "./",
-  "scope": "./",
-  "display": "fullscreen",
+  "start_url": "/visual/",
+  "scope": "/visual/",
+  "display": "standalone",
   "display_override": [
-    "fullscreen",
     "standalone"
   ],
   "lang": "he",
