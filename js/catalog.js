@@ -106,11 +106,6 @@ for(const link of document.querySelectorAll("#topic-links a")){
   link.addEventListener("click",event=>{
     if(event.ctrlKey || event.metaKey || event.shiftKey || event.altKey)return;
     event.preventDefault();
-    // A user tap/click is required by browsers to enter true fullscreen.
-    // If fullscreen is unavailable, the viewer still fills the visual viewport.
-    if (!document.fullscreenElement && document.documentElement.requestFullscreen) {
-      document.documentElement.requestFullscreen({navigationUI:'hide'}).catch(()=>{});
-    }
     lastLink=link;
     history.pushState(null,"","#"+slug);
     renderTopic();
