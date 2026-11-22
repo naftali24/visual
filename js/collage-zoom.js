@@ -36,8 +36,15 @@
   let closeTimer;
   let returnFocus=picture;
   function layout(){
-    const width=picture.offsetWidth*.8,height=picture.offsetHeight*.8;
-    Object.assign(overlay.style,{left:(picture.offsetLeft+(picture.offsetWidth-width)/2)+'px',top:(picture.offsetTop+(picture.offsetHeight-height)/2)+'px',width:width+'px',height:height+'px'});
+    const width=picture.offsetWidth,height=picture.offsetHeight;
+    Object.assign(overlay.style,{left:picture.offsetLeft+'px',top:picture.offsetTop+'px',width:width+'px',height:height+'px'});
+    // Crop dimensions come from this page's grid. Fit that crop to the full
+    // picture box, so different panel sizes receive different zoom factors.
+    if(canvas.width && canvas.height){
+      const scale=Math.min(Math.max(0,width-2)/canvas.width,Math.max(0,height-2)/canvas.height);
+      canvas.style.width=canvas.width*scale+'px';
+      canvas.style.height=canvas.height*scale+'px';
+    }
   }
   function dismiss(){
     clearTimeout(closeTimer);
