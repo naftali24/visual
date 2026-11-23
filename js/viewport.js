@@ -101,7 +101,7 @@
     .items button[aria-pressed="true"] span{color:#082b12!important;text-shadow:0 0 2px #caffd2}
     #labels .label.active rect{fill:#65f18b;stroke:#b6ffcb;stroke-width:2;filter:drop-shadow(0 0 3px #39ff78)}
     .restart{width:44px;height:44px}
-    #detail{position:relative;height:auto;min-height:0;background:#907c43!important}
+    #detail{position:relative;height:auto;min-height:0;background:#978348!important}
     #detail.atlas-detail-scroll{overflow:auto;overscroll-behavior:contain}
     #detail.atlas-detail-overlay{position:absolute;box-sizing:border-box;min-height:0;z-index:10;margin:0;padding:10px 12px;
       overflow:auto;overscroll-behavior:contain;border-radius:6px}
@@ -123,7 +123,7 @@
     #above,#below,#upper-controls,#lower-controls{flex:0 0 auto}
     #stage>#picture{align-self:center;object-fit:contain!important;margin:0 auto!important}
     main>.stage>svg{flex:1 1 0;min-height:0;width:100%;height:100%}
-    #detail,#family-detail{flex:0 0 auto!important;max-height:25%!important;height:auto!important;overflow:auto!important;overscroll-behavior:contain;margin:4px 0 0!important;background:#907c43!important}
+    #detail,#family-detail{flex:0 0 auto!important;max-height:25%!important;height:auto!important;overflow:auto!important;overscroll-behavior:contain;margin:4px 0 0!important;background:#978348!important}
     #family-detail p{font-weight:700;text-align:right;direction:rtl;color:#62caff}
     #family-detail p[lang="en"],html[lang="en"] #family-detail #info{text-align:left;direction:ltr;color:#241800}
     .atlas-game{flex:0 0 auto;max-height:22%;overflow:auto}
