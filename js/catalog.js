@@ -123,7 +123,7 @@ function renderTopic(){
   }
   const source=new URL(link.href);
   source.searchParams.set("lang",selector.value);
-  source.searchParams.set("v","shared-fullscreen-1");
+  source.searchParams.set("v","shared-fullscreen-2");
   if(gameMode())source.searchParams.set("game","1");
   if(viewer.src!==source.href)viewer.src=source.href;
   viewer.title=link.textContent.trim();

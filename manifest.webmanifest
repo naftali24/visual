@@ -4,8 +4,9 @@
   "short_name": "ספר ויזואלי",
   "start_url": "/visual/",
   "scope": "/visual/",
-  "display": "standalone",
+  "display": "fullscreen",
   "display_override": [
+    "fullscreen",
     "standalone"
   ],
   "lang": "he",

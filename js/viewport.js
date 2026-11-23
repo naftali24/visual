@@ -138,7 +138,7 @@
     .items button[aria-pressed="true"] span{color:#082b12!important;text-shadow:0 0 2px #caffd2}
     #labels .label.active rect{fill:#65f18b;stroke:#b6ffcb;stroke-width:2;filter:drop-shadow(0 0 3px #39ff78)}
     .restart{width:44px;height:44px}
-    #detail{position:relative;height:auto;min-height:0}
+    #detail{position:relative;height:auto;min-height:0;background:#9a8548!important}
     #detail.atlas-detail-scroll{overflow:auto;overscroll-behavior:contain}
     #detail.atlas-detail-overlay{position:absolute;box-sizing:border-box;min-height:0;z-index:10;margin:0;padding:10px 12px;
       overflow:auto;overscroll-behavior:contain;border-radius:6px}
