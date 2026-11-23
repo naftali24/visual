@@ -154,3 +154,46 @@ window.addEventListener('pageshow',fitAppShell);
 window.visualViewport?.addEventListener('resize',fitAppShell);
 window.visualViewport?.addEventListener('scroll',fitAppShell);
 fitAppShell();
+
+/* Enter fullscreen once on the persistent shell, including its topic iframe. */
+(() => {
+  const bar=document.querySelector('#catalog .bar');
+  if (!bar) return;
+  const button=document.createElement('button');
+  button.type='button';
+  button.className='game-toggle';
+  button.id='fullscreen-toggle';
+  button.style.fontSize='16px';
+  const status=document.createElement('p');
+  status.setAttribute('role','status');
+  status.hidden=true;
+  bar.append(button,status);
+  const fullscreen=()=>Boolean(document.fullscreenElement || document.webkitFullscreenElement || window.matchMedia('(display-mode: fullscreen)').matches);
+  function refresh(){
+    const english=selector.value==='en';
+    button.textContent=fullscreen() ? (english?'Exit fullscreen':'יציאה ממסך מלא') : (english?'Fullscreen':'מסך מלא');
+    button.setAttribute('aria-pressed',String(fullscreen()));
+  }
+  button.addEventListener('click',async()=>{
+    status.hidden=true;
+    try {
+      if(document.fullscreenElement || document.webkitFullscreenElement){
+        const exit=document.exitFullscreen || document.webkitExitFullscreen;
+        if(exit)await exit.call(document);
+      } else if(!fullscreen()) {
+        const root=document.documentElement;
+        const enter=root.requestFullscreen || root.webkitRequestFullscreen;
+        if(!enter)throw new Error('Fullscreen unavailable');
+        await enter.call(root,{navigationUI:'hide'});
+      }
+    } catch {
+      status.textContent=selector.value==='en'?'Open the link in Chrome, then select Fullscreen.':'פתח את הקישור בכרום ואז לחץ על מסך מלא.';
+      status.hidden=false;
+    }
+    refresh();
+  });
+  document.addEventListener('fullscreenchange',refresh);
+  document.addEventListener('webkitfullscreenchange',refresh);
+  selector.addEventListener('change',refresh);
+  refresh();
+})();
