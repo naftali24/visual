@@ -30,6 +30,21 @@
   gameStyle.textContent = '.atlas-bottom-game{position:fixed;bottom:max(0px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);z-index:40;width:52px;height:52px;border:1px solid #e2b63e;border-radius:9px;background:#f8e8ad;color:#241805;font:700 27px/1 Arial,sans-serif;display:grid;place-items:center;cursor:pointer;opacity:1}.atlas-bottom-game[aria-pressed="true"]{background:#ffd85b;box-shadow:0 0 0 2px #c68c18}.atlas-bottom-game:focus-visible{outline:2px solid white;outline-offset:2px}';
   document.head.append(gameStyle);
 
+  const detailPanel = document.getElementById('detail');
+  const closeDetail = document.createElement('button');
+  closeDetail.type = 'button';
+  closeDetail.className = 'atlas-close-detail';
+  closeDetail.textContent = '×';
+  closeDetail.setAttribute('aria-label', 'Close / סגירה');
+  closeDetail.title = 'סגירת ההסבר / Close explanation';
+  closeDetail.hidden = true;
+  closeDetail.addEventListener('click', () => {
+    if (detailPanel) detailPanel.hidden = true;
+    closeDetail.hidden = true;
+    schedule();
+  });
+  document.body.append(closeDetail);
+
   let pending = false;
   function explanationLayout(totalHeight, detailTop, availableHeight, widthScale) {
     if ((totalHeight - availableHeight) * widthScale <= 30) return 'flow';
@@ -43,6 +58,7 @@
     const inset = 8;
     main.style.width = width + 'px';
     const detail = document.getElementById('detail');
+    closeDetail.hidden = !detail || detail.hidden || document.documentElement.classList.contains('atlas-playing');
     let footerSpace = 0;
     let overlayScaleLimit = Infinity;
     if (detail && !detail.hidden && !document.documentElement.classList.contains('atlas-playing')) {
@@ -50,15 +66,6 @@
       // must not force later, shorter explanations (or larger screens) to overlay.
       detail.classList.remove('atlas-detail-overlay', 'atlas-detail-scroll');
       for (const property of ['left', 'top', 'width', 'height', 'max-height']) detail.style.removeProperty(property);
-      if (!detail.querySelector('.atlas-close-detail')) {
-        const close = document.createElement('button');
-        close.type = 'button';
-        close.className = 'atlas-close-detail';
-        close.textContent = '×';
-        close.setAttribute('aria-label', 'Close / סגירה');
-        close.addEventListener('click', () => { detail.hidden = true; });
-        detail.append(close);
-      }
       const widthScale = Math.min(1, (width - inset * 2) / main.offsetWidth);
       // Leave the bottom navigation buttons outside the reading area.
       footerSpace = 52;
@@ -131,14 +138,18 @@
     .items button[aria-pressed="true"] span{color:#082b12!important;text-shadow:0 0 2px #caffd2}
     #labels .label.active rect{fill:#65f18b;stroke:#b6ffcb;stroke-width:2;filter:drop-shadow(0 0 3px #39ff78)}
     .restart{width:44px;height:44px}
-    #detail{position:relative;padding-right:80px;height:auto;min-height:0}
+    #detail{position:relative;height:auto;min-height:0}
     #detail.atlas-detail-scroll{overflow:auto;overscroll-behavior:contain}
     #detail.atlas-detail-overlay{position:absolute;box-sizing:border-box;min-height:0;z-index:10;margin:0;padding:10px 12px;
-      overflow:auto;overscroll-behavior:contain;border-radius:6px;padding-right:80px}
-    #detail .atlas-close-detail{position:absolute;right:0;top:0;width:64px;height:64px;
-      border:2px solid #ffda68;border-radius:10px;background:linear-gradient(#ffe788,#d99a16);color:#241300;font:700 48px/1 Arial,sans-serif;cursor:pointer}
+      overflow:auto;overscroll-behavior:contain;border-radius:6px}
+    .atlas-close-detail{position:fixed;bottom:max(0px,env(safe-area-inset-bottom));right:calc(50% + 36px);z-index:40;width:52px;height:52px;
+      border:2px solid #ffda68;border-radius:9px;background:linear-gradient(#ffe788,#d99a16);color:#241300;font:700 40px/1 Arial,sans-serif;cursor:pointer}
+    .atlas-close-detail[hidden]{display:none!important}
+    .atlas-close-detail:focus-visible{outline:2px solid white;outline-offset:2px}
     #detail h2{font-size:24px;margin:0 0 8px}
-    #detail p,#detail button:not(.atlas-close-detail){font-size:20px;line-height:1.35}
+    #detail p,#detail button:not(.atlas-close-detail){font-size:20px;line-height:1.35;font-weight:700;text-align:left;direction:ltr}
+    #detail p[lang="he"],#detail button[lang="he"]{text-align:right;direction:rtl;color:#62caff!important}
+    #detail #englishInfo,#detail #explanation{display:block;width:100%;text-align:left;direction:ltr;font-weight:700}
     #detail p[lang="he"]{font-size:20px}
     body[data-goalkeeping] #detail p,body[data-goalkeeping] #detail button:not(.atlas-close-detail){font-size:18px}
     body[data-goalkeeping] #detail h2{font-size:22px}`;
