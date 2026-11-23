@@ -123,7 +123,7 @@ function renderTopic(){
   }
   const source=new URL(link.href);
   source.searchParams.set("lang",selector.value);
-  source.searchParams.set("v","shared-fullscreen-2");
+  source.searchParams.set("v","shared-viewport-3");
   if(gameMode())source.searchParams.set("game","1");
   if(viewer.src!==source.href)viewer.src=source.href;
   viewer.title=link.textContent.trim();
@@ -140,3 +140,17 @@ window.addEventListener("message",event=>{
 });
 translateCatalog();
 renderTopic();
+
+function fitAppShell(){
+  const visible=window.visualViewport;
+  const root=document.documentElement;
+  root.style.setProperty('--app-width',(visible?.width || root.clientWidth)+'px');
+  root.style.setProperty('--app-height',(visible?.height || window.innerHeight)+'px');
+  root.style.setProperty('--app-left',(visible?.offsetLeft || 0)+'px');
+  root.style.setProperty('--app-top',(visible?.offsetTop || 0)+'px');
+}
+window.addEventListener('resize',fitAppShell);
+window.addEventListener('pageshow',fitAppShell);
+window.visualViewport?.addEventListener('resize',fitAppShell);
+window.visualViewport?.addEventListener('scroll',fitAppShell);
+fitAppShell();

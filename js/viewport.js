@@ -30,7 +30,12 @@
   gameStyle.textContent = '.atlas-bottom-game{position:fixed;bottom:max(0px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);z-index:40;width:52px;height:52px;border:1px solid #e2b63e;border-radius:9px;background:#f8e8ad;color:#241805;font:700 27px/1 Arial,sans-serif;display:grid;place-items:center;cursor:pointer;opacity:1}.atlas-bottom-game[aria-pressed="true"]{background:#ffd85b;box-shadow:0 0 0 2px #c68c18}.atlas-bottom-game:focus-visible{outline:2px solid white;outline-offset:2px}';
   document.head.append(gameStyle);
 
-  const detailPanel = document.getElementById('detail');
+  const detailPanel = (document.getElementById('detail') || document.getElementById('family-detail'));
+  if (detailPanel?.id === 'family-detail') {
+    main.append(detailPanel);
+    const oldClose = document.getElementById('close-info');
+    if (oldClose) oldClose.hidden = true;
+  }
   const closeDetail = document.createElement('button');
   closeDetail.type = 'button';
   closeDetail.className = 'atlas-close-detail';
@@ -46,84 +51,42 @@
   document.body.append(closeDetail);
 
   let pending = false;
-  function explanationLayout(totalHeight, detailTop, availableHeight, widthScale) {
-    if ((totalHeight - availableHeight) * widthScale <= 30) return 'flow';
-    return (availableHeight - detailTop) * widthScale >= 96 ? 'scroll' : 'overlay';
-  }
   function fit() {
     pending = false;
     const viewport = window.visualViewport;
     const width = viewport?.width || document.documentElement.clientWidth;
     const height = viewport?.height || window.innerHeight;
-    const inset = 8;
-    main.style.width = width + 'px';
-    const detail = document.getElementById('detail');
-    closeDetail.hidden = !detail || detail.hidden || document.documentElement.classList.contains('atlas-playing');
-    let footerSpace = 0;
-    let overlayScaleLimit = Infinity;
-    if (detail && !detail.hidden && !document.documentElement.classList.contains('atlas-playing')) {
-      // Measure the explanation in normal flow each time. A previous overlay
-      // must not force later, shorter explanations (or larger screens) to overlay.
+    const title = document.getElementById('page-title');
+    const titleHeight = title ? title.getBoundingClientRect().height + 8 : 0;
+    const footer = 60;
+    Object.assign(main.style, {
+      width: width + 'px',
+      height: Math.max(1, height - titleHeight - footer) + 'px',
+      top: ((viewport?.offsetTop || 0) + titleHeight) + 'px',
+      left: (viewport?.offsetLeft || 0) + 'px',
+      transform: 'none'
+    });
+    const detail = detailPanel;
+    const playing = document.documentElement.classList.contains('atlas-playing');
+    closeDetail.hidden = !detail || detail.hidden || playing;
+    if (detail) {
       detail.classList.remove('atlas-detail-overlay', 'atlas-detail-scroll');
-      for (const property of ['left', 'top', 'width', 'height', 'max-height']) detail.style.removeProperty(property);
-      const widthScale = Math.min(1, (width - inset * 2) / main.offsetWidth);
-      // Leave the bottom navigation buttons outside the reading area.
-      footerSpace = 52;
-      const availableHeight = (height - inset * 2 - footerSpace) / widthScale;
-      const mode = explanationLayout(main.offsetHeight, detail.offsetTop, availableHeight, widthScale);
-      if (mode === 'scroll') {
-        detail.classList.add('atlas-detail-scroll');
-        detail.style.height = Math.max(0, availableHeight - detail.offsetTop - 4) + 'px';
-      }
-      const needsOverlay = mode === 'overlay';
-      if (needsOverlay) footerSpace = 0;
-      const active = document.querySelector('.items button[aria-pressed="true"], #labels .label.active');
-      if (active && needsOverlay) {
-        const top = active.closest('#above') || (active.dataset.index !== undefined && Number(active.dataset.index) < 6);
-        const bank = document.getElementById(top ? 'below' : 'above');
-        const labels = bank ? [bank] : [...document.querySelectorAll('#labels .label')].filter(node => (Number(node.dataset.index) < 6) !== Boolean(top));
-        if (labels.length) {
-          const parent = main.getBoundingClientRect();
-          const factor = parent.width / main.offsetWidth || 1;
-          const boxes = labels.map(node => node.getBoundingClientRect());
-          const left = Math.min(...boxes.map(box => box.left));
-          const right = Math.max(...boxes.map(box => box.right));
-          const y = Math.min(...boxes.map(box => box.top));
-          const bottom = Math.max(...boxes.map(box => box.bottom));
-          detail.classList.add('atlas-detail-overlay');
-          const overlayTop = (y - parent.top) / factor;
-          const bankHeight = (bottom - y) / factor;
-          Object.assign(detail.style, {
-            left:(left-parent.left)/factor+'px',
-            top:overlayTop+'px',
-            width:(right-left)/factor+'px',
-            maxHeight:bankHeight+'px'
-          });
-          if (top && document.body.matches('[data-mediterranean-layout], [data-explanation-at-image-bottom]')) {
-            const photo = document.getElementById('picture').getBoundingClientRect();
-            const photoBottom = (photo.bottom - parent.top) / factor;
-            footerSpace = 52;
-            const usableHeight = height - inset * 2 - footerSpace;
-            const panelHeight = Math.min(200, Math.max(1, usableHeight - photoBottom * .01));
-            overlayScaleLimit = (usableHeight - panelHeight) / photoBottom;
-            const scale = Math.max(.01, Math.min(widthScale, usableHeight / main.offsetHeight, overlayScaleLimit));
-            detail.style.top = photoBottom + 'px';
-            detail.style.height = detail.style.maxHeight = panelHeight / scale + 'px';
-          } else if (top) {
-            const finalScale = Math.max(.01, Math.min(widthScale, (height - inset * 2) / main.offsetHeight));
-            const overlayHeight = 250 / finalScale;
-            detail.style.top = Math.max(0, overlayTop - 100 / finalScale) + 'px';
-            detail.style.height = overlayHeight + 'px';
-            detail.style.maxHeight = overlayHeight + 'px';
-          }
-        }
-      }
+      for (const property of ['left','top','width','height','max-height']) detail.style.removeProperty(property);
     }
-    const scale = Math.min(1, overlayScaleLimit, (width - inset * 2) / main.offsetWidth,
-      (height - inset * 2 - footerSpace) / main.offsetHeight);
-    main.style.transform = `translateX(-50%) scale(${Math.max(.01, scale)})`;
-    main.style.top = ((viewport?.offsetTop || 0) + inset) + 'px';
-    main.style.left = ((viewport?.offsetLeft || 0) + width / 2) + 'px';
+    const stage = document.getElementById('stage') || main.querySelector('.stage');
+    const photo = document.getElementById('picture');
+    if (stage && photo) {
+      const wrap = document.getElementById('photo-wrap');
+      const banks = ['upper-controls','lower-controls'].every(id => document.getElementById(id))
+        ? ['upper-controls','lower-controls'] : ['above','below'];
+      const controlsHeight = banks.reduce((sum, id) => sum + (document.getElementById(id)?.offsetHeight || 0), 0);
+      const availableWidth = Math.max(1, stage.clientWidth - 12);
+      const availableHeight = Math.max(1, stage.clientHeight - controlsHeight - 12);
+      const ratio = photo.naturalWidth && photo.naturalHeight ? photo.naturalWidth / photo.naturalHeight : 1.5;
+      const photoWidth = Math.min(availableWidth, availableHeight * ratio);
+      Object.assign(photo.style, {width:photoWidth+'px',height:(photoWidth/ratio)+'px',maxWidth:'100%',maxHeight:'none',flex:'0 0 auto'});
+      if (wrap) Object.assign(wrap.style,{height:availableHeight+'px',flex:'1 1 0',minHeight:'0'});
+    }
     window.dispatchEvent(new Event('atlas-layout'));
   }
   function schedule() {
@@ -153,12 +116,26 @@
     #detail p[lang="he"]{font-size:20px}
     body[data-goalkeeping] #detail p,body[data-goalkeeping] #detail button:not(.atlas-close-detail){font-size:18px}
     body[data-goalkeeping] #detail h2{font-size:22px}`;
+  style.textContent += `
+    html,body{width:100%;height:100%;margin:0;overscroll-behavior:none}
+    body>main,body>main#family-main{position:fixed!important;display:flex!important;flex-direction:column!important;justify-content:flex-start!important;min-height:0!important;max-width:none!important;margin:0!important;padding:4px!important;overflow:hidden;transform:none!important}
+    main>#stage,main>.stage{display:flex!important;flex-direction:column!important;flex:1 1 0!important;min-height:0!important;overflow:hidden;justify-content:center}
+    #above,#below,#upper-controls,#lower-controls{flex:0 0 auto}
+    #stage>#picture{align-self:center;object-fit:contain!important;margin:0 auto!important}
+    main>.stage>svg{flex:1 1 0;min-height:0;width:100%;height:100%}
+    #detail,#family-detail{flex:0 0 auto!important;max-height:25%!important;height:auto!important;overflow:auto!important;overscroll-behavior:contain;margin:4px 0 0!important;background:#9a8548!important}
+    #family-detail p{font-weight:700;text-align:right;direction:rtl;color:#62caff}
+    #family-detail p[lang="en"],html[lang="en"] #family-detail #info{text-align:left;direction:ltr;color:#241800}
+    .atlas-game{flex:0 0 auto;max-height:22%;overflow:auto}
+    .restart,.atlas-bottom-game,.atlas-close-detail{bottom:max(4px,env(safe-area-inset-bottom))!important}
+  `;
   document.head.append(style);
   new ResizeObserver(schedule).observe(main);
   new MutationObserver(records => {
     if (records.some(record => !record.target.closest?.("#guides, #leaders"))) schedule();
   }).observe(main, {childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:['hidden']});
   document.getElementById('picture')?.addEventListener('load', schedule);
+  if (detailPanel) new ResizeObserver(schedule).observe(detailPanel);
   window.addEventListener('resize', schedule);
   window.visualViewport?.addEventListener('resize', schedule);
   window.visualViewport?.addEventListener('scroll', schedule);
